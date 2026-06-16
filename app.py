@@ -99,6 +99,15 @@ if uploaded_file is not None:
                             st.write(f"- **Career Velocity:** {xray_data.get('velocity', 'N/A')}")
                             st.write(f"- **Company Tier:** {xray_data.get('elite', 'N/A')}")
                             st.write(f"- **Leadership Bias:** {xray_data.get('leadership', 'N/A')}")
+                            st.write(f"- **Flight Risk (Poachability):** {xray_data.get('flight_risk', 'N/A')}")
+                            
+                            st.markdown("**AI Red Flag Scanner:**")
+                            flags = xray_data.get('red_flags', [])
+                            for f in flags:
+                                if "Clean" in f:
+                                    st.write(f"✅ {f}")
+                                else:
+                                    st.write(f"🚩 {f}")
                             
                             st.markdown("**Generative AI Summary:**")
                             st.info(xray_data.get('exec_summary', 'N/A'))

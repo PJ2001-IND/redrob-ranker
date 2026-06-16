@@ -315,6 +315,33 @@ def get_leadership_label(cand):
     if score < 1.0: return "🧊 Passive"
     return "⚖️ Balanced"
 
+def get_flight_risk(cand):
+    history = cand.get("career_history", [])
+    if not history: return "Unknown"
+    current_job = history[0]
+    if current_job.get("end_date") == "Present":
+        start = current_job.get("start_date")
+        if start:
+            try:
+                y = int(start.split('-')[0])
+                if y <= 2022: return "🔴 High (Ready to switch)"
+                if y == 2023: return "🟠 Medium"
+                return "🟢 Low (Recently joined)"
+            except: pass
+    return "Unknown"
+
+def get_red_flags(cand):
+    flags = []
+    if compute_career_stability(cand) < 0.9:
+        flags.append("Serial Job Hopper")
+    if compute_dunning_kruger_penalty(cand) < 0.9:
+        flags.append("Resume Inflation")
+    resp = cand.get("redrob_signals", {}).get("recruiter_response_rate", 1.0)
+    if resp < 0.2:
+        flags.append("Poor Communicator")
+    if not flags: return ["Clean Profile"]
+    return flags
+
 def generate_reasoning(cand, rrf_score):
     yoe = cand.get("profile", {}).get("years_of_experience", 0)
     title = cand.get("profile", {}).get("current_title", "Engineer")
@@ -329,6 +356,8 @@ def generate_reasoning(cand, rrf_score):
         "velocity": get_velocity_label(cand),
         "elite": get_elite_status(cand),
         "leadership": get_leadership_label(cand),
+        "flight_risk": get_flight_risk(cand),
+        "red_flags": get_red_flags(cand),
         "stability": round(compute_career_stability(cand), 2),
         "modesty_score": round(2.0 - compute_dunning_kruger_penalty(cand), 2),
         "semantic_score": round(float(rrf_score * 1000), 2),
