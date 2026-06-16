@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 import numpy as np
 from rank_bm25 import BM25Okapi
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, CrossEncoder
 
 # 1. Dynamic Knowledge Graph (Query Expansion)
 KNOWLEDGE_GRAPH = {
@@ -27,6 +27,23 @@ def get_expanded_query():
         query.extend(v)
     return " ".join(query).split()
 
+# 2. Latent Skill Inference
+LATENT_SKILLS = {
+    "pytorch": ["python", "deep learning", "machine learning"],
+    "tensorflow": ["python", "deep learning", "machine learning"],
+    "langchain": ["python", "llm", "generative ai"],
+    "pinecone": ["vector database"],
+    "milvus": ["vector database"]
+}
+
+def infer_latent_skills(cand):
+    inferred = set()
+    for s in cand.get("skills", []):
+        name = s.get("name", "").lower()
+        if name in LATENT_SKILLS:
+            inferred.update(LATENT_SKILLS[name])
+    return list(inferred)
+
 SERVICE_COMPANIES = {"tcs", "infosys", "wipro", "accenture", "cognizant", "capgemini"}
 
 def is_honeypot(cand):
@@ -35,18 +52,13 @@ def is_honeypot(cand):
         return True
     
     skills = cand.get("skills", [])
-    expert_zero_duration = 0
-    for s in skills:
-        if s.get("proficiency") == "expert" and s.get("duration_months", 1) == 0:
-            expert_zero_duration += 1
-    if expert_zero_duration >= 3:
-        return True
+    expert_zero_duration = sum(1 for s in skills if s.get("proficiency") == "expert" and s.get("duration_months", 1) == 0)
+    if expert_zero_duration >= 3: return True
     return False
 
 def compute_career_stability(cand):
     exp_list = cand.get("career_history", [])
-    if not exp_list or len(exp_list) < 2: 
-        return 1.0
+    if not exp_list or len(exp_list) < 2: return 1.0
     
     total_months = 0
     valid_roles = 0
@@ -60,15 +72,31 @@ def compute_career_stability(cand):
                 ey, em, _ = map(int, end.split('-'))
                 total_months += (ey - sy) * 12 + (em - sm)
                 valid_roles += 1
-            except:
-                pass
+            except: pass
     
     if valid_roles == 0: return 1.0
     avg_tenure = total_months / valid_roles
-    
-    if avg_tenure < 12: return 0.8  # Penalty for extreme job-hopping
-    if avg_tenure > 24: return 1.2  # Boost for stability
+    if avg_tenure < 12: return 0.8  # hopper
+    if avg_tenure > 24: return 1.2  # stable
     return 1.0
+
+# 3. Lifelong Learner Index
+def compute_lifelong_learner_index(cand):
+    bonus = 1.0
+    edu = cand.get("education", [])
+    for e in edu:
+        deg = e.get("degree", "").lower()
+        if any(x in deg for x in ["master", "ms", "m.s", "phd", "ph.d"]):
+            bonus += 0.1
+            break
+    for e in edu:
+        try:
+            yr = int(e.get("year_of_graduation", 0))
+            if yr >= 2022:
+                bonus += 0.05
+                break
+        except: pass
+    return bonus
 
 def compute_behavioral_score(cand):
     signals = cand.get("redrob_signals", {})
@@ -90,8 +118,8 @@ def compute_behavioral_score(cand):
     if last_active < "2025-01-01": score -= 10
         
     stability = compute_career_stability(cand)
-    # Multiply behavioral score by career stability index
-    return score * stability
+    learner_idx = compute_lifelong_learner_index(cand)
+    return score * stability * learner_idx
 
 def extract_text_for_bm25(cand):
     text = []
@@ -103,7 +131,6 @@ def extract_text_for_bm25(cand):
     for i, job in enumerate(history):
         title = job.get("title", "")
         desc = job.get("description", "")
-        # Recency Weighting: Double the weight of the most recent job
         if i == 0:
             text.append(title)
             text.append(desc)
@@ -112,6 +139,10 @@ def extract_text_for_bm25(cand):
         
     for skill in cand.get("skills", []):
         text.append(skill.get("name", ""))
+        
+    for sk in infer_latent_skills(cand):
+        text.append(sk)
+        text.append(sk)
         
     return " ".join(text).lower()
 
@@ -122,15 +153,28 @@ def has_product_experience(cand):
             return True
     return False
 
-def generate_reasoning(cand, rrf_score, stability):
+# 4. Hyper-Personalized Reasoning Extraction
+def extract_best_project_context(cand):
+    history = cand.get("career_history", [])
+    for job in history:
+        desc = job.get("description", "")
+        sentences = desc.split(".")
+        for s in sentences:
+            if any(k in s.lower() for k in ["recommendation", "vector", "embedding", "llm", "search"]):
+                return s.strip()[:100] + "..."
+    return "Strong semantic alignment with AI system requirements."
+
+def generate_reasoning(cand, rrf_score):
     profile = cand.get("profile", {})
     title = profile.get("current_title", "Engineer")
     yoe = profile.get("years_of_experience", 0)
     signals = cand.get("redrob_signals", {})
     resp_rate = signals.get("recruiter_response_rate", 0.0)
     
-    stab_str = "Stable tenure" if stability >= 1.0 else "High mobility"
-    return f"{yoe} years exp as {title} ({stab_str}). High hybrid RRF score. Highly responsive ({int(resp_rate*100)}%)."
+    project_context = extract_best_project_context(cand)
+    learner = "Lifelong Learner." if compute_lifelong_learner_index(cand) > 1.0 else ""
+    
+    return f"{yoe} yrs exp as {title}. {project_context} Highly responsive ({int(resp_rate*100)}%). {learner}"
 
 def main():
     parser = argparse.ArgumentParser()
@@ -167,61 +211,59 @@ def main():
     
     behav_scores = np.array([compute_behavioral_score(c) for c in candidates])
     
-    # Normalize
     if bm25_scores.max() > 0: bm25_scores = bm25_scores / bm25_scores.max()
     if behav_scores.max() > 0: behav_scores = behav_scores / behav_scores.max()
     
-    # Combined Pass 2 Score
     pass2_scores = bm25_scores * 0.6 + behav_scores * 0.4
     
-    # Top 1000 for Semantic
     top_1000_idx = np.argsort(pass2_scores)[::-1][:1000]
-    top_candidates = [candidates[i] for i in top_1000_idx]
+    top_1000_candidates = [candidates[i] for i in top_1000_idx]
     
-    # Keep their BM25 ranks within this top 1000 subset
-    bm25_subset_scores = pass2_scores[top_1000_idx]
-    bm25_ranks = np.argsort(np.argsort(bm25_subset_scores)[::-1]) # Rank 0 is best
+    bm25_ranks_1000 = np.argsort(np.argsort(pass2_scores[top_1000_idx])[::-1])
     
-    print(f"Top 1000 selected. Time elapsed: {time.time() - start_time:.2f}s")
-    
-    print("Pass 3: Semantic Re-Ranking...")
-    model = SentenceTransformer('all-MiniLM-L6-v2')
+    print(f"Pass 3: Bi-Encoder Semantic Re-Ranking (Top 1000)... Time: {time.time() - start_time:.2f}s")
+    bi_model = SentenceTransformer('all-MiniLM-L6-v2')
     jd_summary = "Senior AI Engineer. Product company. Embeddings, retrieval, vector database, ranking, evaluation frameworks, NDCG, MRR, python."
-    jd_emb = model.encode(jd_summary)
+    jd_emb = bi_model.encode(jd_summary)
     
-    cand_summaries = []
-    for c in top_candidates:
+    cand_summaries_1000 = []
+    for c in top_1000_candidates:
         prof = c.get("profile", {})
-        cand_summaries.append(f"{prof.get('current_title', '')}. {prof.get('summary', '')}")
+        cand_summaries_1000.append(f"{prof.get('current_title', '')}. {prof.get('summary', '')}")
         
-    cand_embs = model.encode(cand_summaries)
-    cos_sims = np.dot(cand_embs, jd_emb) / (np.linalg.norm(cand_embs, axis=1) * np.linalg.norm(jd_emb))
+    cand_embs = bi_model.encode(cand_summaries_1000)
+    bi_cos_sims = np.dot(cand_embs, jd_emb) / (np.linalg.norm(cand_embs, axis=1) * np.linalg.norm(jd_emb))
     
-    semantic_ranks = np.argsort(np.argsort(cos_sims)[::-1]) # Rank 0 is best
+    top_200_local_idx = np.argsort(bi_cos_sims)[::-1][:200]
+    top_200_candidates = [top_1000_candidates[i] for i in top_200_local_idx]
+    bm25_ranks_200 = [bm25_ranks_1000[i] for i in top_200_local_idx]
+    cand_summaries_200 = [cand_summaries_1000[i] for i in top_200_local_idx]
     
-    print("Pass 4: Reciprocal Rank Fusion (RRF)...")
+    print(f"Pass 4: Cross-Encoder Absolute Re-Ranking (Top 200)... Time: {time.time() - start_time:.2f}s")
+    cross_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-2-v2')
+    cross_inp = [[jd_summary, cand_summaries_200[i]] for i in range(200)]
+    cross_scores = cross_model.predict(cross_inp)
+    cross_ranks_200 = np.argsort(np.argsort(cross_scores)[::-1])
+    
+    print("Pass 5: Reciprocal Rank Fusion (RRF)...")
     k = 60
     rrf_scores = []
-    for i in range(1000):
-        rrf = 1.0 / (k + bm25_ranks[i] + 1) + 1.0 / (k + semantic_ranks[i] + 1)
-        rrf_scores.append((rrf, top_candidates[i]))
+    for i in range(200):
+        rrf = 1.0 / (k + bm25_ranks_200[i] + 1) + 1.0 / (k + cross_ranks_200[i] + 1)
+        rrf_scores.append((rrf, top_200_candidates[i]))
         
-    # Sort top 100
     rrf_scores.sort(key=lambda x: (-x[0], x[1]["candidate_id"]))
     
     final_100_candidates = [x[1] for x in rrf_scores[:100]]
     final_100_scores = [x[0] for x in rrf_scores[:100]]
     
-    print(f"Generating reasoning and saving to {args.out}...")
+    print(f"Generating hyper-personalized reasoning and saving to {args.out}...")
     with open(args.out, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["candidate_id", "rank", "score", "reasoning"])
         for rank, (cand, score) in enumerate(zip(final_100_candidates, final_100_scores), 1):
             cid = cand.get("candidate_id")
-            stab = compute_career_stability(cand)
-            reasoning = generate_reasoning(cand, score, stab)
-            # Scale RRF score slightly for presentation, RRF is usually very small (e.g. 0.03)
-            # Multiplying by 1000 makes it readable.
+            reasoning = generate_reasoning(cand, score)
             display_score = round(float(score * 1000), 4)
             writer.writerow([cid, rank, display_score, reasoning])
             
