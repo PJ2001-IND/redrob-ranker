@@ -403,16 +403,16 @@ def main():
     bm25_ranks_200 = [bm25_ranks_1000[i] for i in top_200_local_idx]
     cand_summaries_200 = [cand_summaries_1000[i] for i in top_200_local_idx]
     
-    print(f"Pass 4: Cross-Encoder Absolute Re-Ranking (Top 200)... Time: {time.time() - start_time:.2f}s")
+    print(f"Pass 4: Cross-Encoder Absolute Re-Ranking (Top {len(cand_summaries_200)})... Time: {time.time() - start_time:.2f}s")
     cross_model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-2-v2')
-    cross_inp = [[jd_summary, cand_summaries_200[i]] for i in range(200)]
+    cross_inp = [[jd_summary, cand_summaries_200[i]] for i in range(len(cand_summaries_200))]
     cross_scores = cross_model.predict(cross_inp)
     cross_ranks_200 = np.argsort(np.argsort(cross_scores)[::-1])
     
     print("Pass 5: Reciprocal Rank Fusion (RRF)...")
     k = 60
     rrf_scores = []
-    for i in range(200):
+    for i in range(len(cand_summaries_200)):
         rrf = 1.0 / (k + bm25_ranks_200[i] + 1) + 1.0 / (k + cross_ranks_200[i] + 1)
         display_score = round(float(rrf * 1000), 4)
         rrf_scores.append((display_score, top_200_candidates[i]))
