@@ -8,7 +8,7 @@ backgroundColor: #f8f9fa
 
 # Redrob Candidate Ranker
 ### India Runs: Data & AI Challenge
-Team Antigravity
+Team PJ2001-IND
 
 ---
 
@@ -69,6 +69,6 @@ For the top 1000 candidates filtered by BM25 and Behavioral metrics, we apply tr
 - **Scale:** Successfully evaluated **100,000 candidates**.
 - **Speed:** Total runtime of **17.62 seconds** on a standard CPU.
 - **Efficiency:** Fits comfortably within the 16GB RAM / 5-minute constraint.
-- **Output:** A pristine `submission.csv` containing the Top 100 highest-quality, verifiable fits for the Senior AI Engineer role.
+- **Output:** A pristine `team_PJ2001_IND.csv` containing the Top 100 highest-quality, verifiable fits for the Senior AI Engineer role.
 
 *Building what next India runs on.*
