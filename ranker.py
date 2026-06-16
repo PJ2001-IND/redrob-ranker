@@ -45,6 +45,7 @@ def infer_latent_skills(cand):
     return list(inferred)
 
 SERVICE_COMPANIES = {"tcs", "infosys", "wipro", "accenture", "cognizant", "capgemini"}
+ELITE_COMPANIES = {"google", "meta", "facebook", "openai", "deepmind", "anthropic", "apple", "microsoft", "amazon", "aws"}
 
 def is_honeypot(cand):
     title = cand.get("profile", {}).get("current_title", "").lower()
@@ -80,7 +81,6 @@ def compute_career_stability(cand):
     if avg_tenure > 24: return 1.2
     return 1.0
 
-# 3. Internal Promotion Detector (High Velocity Performer)
 def compute_promotion_bonus(cand):
     history = cand.get("career_history", [])
     if len(history) < 2: return 1.0
@@ -107,7 +107,26 @@ def compute_promotion_bonus(cand):
                 
     return min(1.0 + (promotions * 0.1), 1.3)
 
-# 4. Lifelong Learner Index
+def compute_dunning_kruger_penalty(cand):
+    yoe = cand.get("profile", {}).get("years_of_experience", 0)
+    if yoe <= 0: return 1.0
+    
+    expert_skills = sum(1 for s in cand.get("skills", []) if s.get("proficiency") == "expert")
+    ratio = expert_skills / yoe
+    
+    if ratio > 5: return 0.7
+    if ratio > 3: return 0.85
+    if ratio < 0.5 and yoe >= 8: return 1.1 # Modesty boost
+    return 1.0
+
+def compute_elite_alumni_bonus(cand):
+    history = cand.get("career_history", [])
+    for job in history:
+        comp = job.get("company", "").lower()
+        if any(elite in comp for elite in ELITE_COMPANIES):
+            return 1.2
+    return 1.0
+
 def compute_lifelong_learner_index(cand):
     bonus = 1.0
     edu = cand.get("education", [])
@@ -147,9 +166,11 @@ def compute_behavioral_score(cand):
     stability = compute_career_stability(cand)
     learner_idx = compute_lifelong_learner_index(cand)
     promo_bonus = compute_promotion_bonus(cand)
-    return score * stability * learner_idx * promo_bonus
+    dk_penalty = compute_dunning_kruger_penalty(cand)
+    elite_bonus = compute_elite_alumni_bonus(cand)
+    
+    return score * stability * learner_idx * promo_bonus * dk_penalty * elite_bonus
 
-# 5. Exponential Skill Decay / Time-aware text extraction
 def extract_text_for_bm25(cand):
     text = []
     profile = cand.get("profile", {})
@@ -162,7 +183,6 @@ def extract_text_for_bm25(cand):
         desc = job.get("description", "") or ""
         end = job.get("end_date", "") or ""
         
-        # Skill Decay Implementation: Repeat recent context more often
         repeats = 1
         if end == "Present" or "2024" in end or "2025" in end:
             repeats = 3
@@ -199,6 +219,24 @@ def extract_best_project_context(cand):
                 return s.strip()[:100] + "..."
     return "Strong semantic alignment with AI system requirements."
 
+def get_inflation_risk_label(cand):
+    yoe = cand.get("profile", {}).get("years_of_experience", 0)
+    if yoe <= 0: return "Low"
+    expert_skills = sum(1 for s in cand.get("skills", []) if s.get("proficiency") == "expert")
+    ratio = expert_skills / yoe
+    if ratio > 5: return "🔴 High (Dunning-Kruger)"
+    if ratio > 3: return "🟠 Medium"
+    return "🟢 Low"
+
+def get_velocity_label(cand):
+    bonus = compute_promotion_bonus(cand)
+    if bonus >= 1.2: return "🚀 Top 5% (Fast-Tracked)"
+    if bonus >= 1.1: return "📈 High Velocity"
+    return "Steady"
+
+def get_elite_status(cand):
+    return "⭐ Elite Alumni" if compute_elite_alumni_bonus(cand) > 1.0 else "Standard"
+
 def generate_reasoning(cand, rrf_score):
     profile = cand.get("profile", {})
     title = profile.get("current_title", "Engineer")
@@ -207,10 +245,16 @@ def generate_reasoning(cand, rrf_score):
     resp_rate = signals.get("recruiter_response_rate", 0.0)
     
     project_context = extract_best_project_context(cand)
-    promo = "Fast-track promotions." if compute_promotion_bonus(cand) > 1.0 else ""
-    learner = "Lifelong Learner." if compute_lifelong_learner_index(cand) > 1.0 else ""
+    base_reasoning = f"{yoe} yrs exp as {title}. {project_context} Highly responsive ({int(resp_rate*100)}%)."
     
-    return f"{yoe} yrs exp as {title}. {project_context} Highly responsive ({int(resp_rate*100)}%). {promo} {learner}".strip()
+    xray_data = {
+        "inflation": get_inflation_risk_label(cand),
+        "velocity": get_velocity_label(cand),
+        "elite": get_elite_status(cand)
+    }
+    xray_str = json.dumps(xray_data)
+    
+    return f"{base_reasoning} | XRAY:{xray_str}"
 
 def main():
     parser = argparse.ArgumentParser()
@@ -294,7 +338,7 @@ def main():
     final_100_candidates = [x[1] for x in rrf_scores[:100]]
     final_100_scores = [x[0] for x in rrf_scores[:100]]
     
-    print(f"Generating hyper-personalized reasoning and saving to {args.out}...")
+    print(f"Generating X-Ray reasoning and saving to {args.out}...")
     with open(args.out, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["candidate_id", "rank", "score", "reasoning"])

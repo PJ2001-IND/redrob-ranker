@@ -18,8 +18,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🤖 Redrob AI Recruiter Dashboard")
-st.markdown("**Welcome to the Future of Hiring.** Upload `small_candidates.jsonl` to run the state-of-the-art Two-Stage NLP pipeline.")
+st.title("🤖 Redrob AI Recruiter Dashboard (X-Ray Edition)")
+st.markdown("**Welcome to the Future of Hiring.** Upload `small_candidates.jsonl` to run the state-of-the-art Psychological AI pipeline.")
 
 uploaded_file = st.file_uploader("Upload Candidates (JSONL)", type="jsonl")
 
@@ -28,7 +28,7 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
         
     if st.button("🚀 Run AI Ranking Pipeline", type="primary"):
-        with st.spinner("Initializing Pipeline (BM25 -> Bi-Encoder -> Cross-Encoder -> RRF)..."):
+        with st.spinner("Initializing Pipeline (BM25 -> Bi-Encoder -> Cross-Encoder -> RRF -> Psych Profiling)..."):
             start_time = time.time()
             result = subprocess.run(
                 ["python", "ranker.py", "--candidates", "temp_candidates.jsonl", "--out", "temp_submission.csv"],
@@ -60,6 +60,17 @@ if uploaded_file is not None:
                 title = profile.get("current_title", "Engineer")
                 company = profile.get("current_company", "")
                 
+                reasoning_full = str(row['reasoning'])
+                xray_data = {"inflation": "Unknown", "velocity": "Unknown", "elite": "Unknown"}
+                reasoning_text = reasoning_full
+                
+                if " | XRAY:" in reasoning_full:
+                    parts = reasoning_full.split(" | XRAY:")
+                    reasoning_text = parts[0]
+                    try:
+                        xray_data = json.loads(parts[1])
+                    except: pass
+                
                 with st.container():
                     st.markdown(f'''
                     <div class="metric-card">
@@ -74,11 +85,18 @@ if uploaded_file is not None:
                             </div>
                         </div>
                         <div class="reasoning-box">
-                            💡 <b>AI Reasoning:</b> {row['reasoning']}
+                            💡 <b>AI Reasoning:</b> {reasoning_text}
                         </div>
                     </div>
-                    <br>
                     ''', unsafe_allow_html=True)
+                    
+                    with st.expander("🔍 Open AI X-Ray Vision (Psychological Profile)"):
+                        st.markdown("**Under-the-Hood Metrics:**")
+                        col1, col2, col3 = st.columns(3)
+                        col1.metric("Resume Inflation Risk", xray_data.get('inflation', 'N/A'))
+                        col2.metric("Career Velocity", xray_data.get('velocity', 'N/A'))
+                        col3.metric("Company Tier", xray_data.get('elite', 'N/A'))
+                    st.write("")
                     
             with open("temp_submission.csv", "rb") as file:
                 st.download_button("Download Full CSV Submission", data=file, file_name="team_PJ2001_IND.csv", mime="text/csv")
