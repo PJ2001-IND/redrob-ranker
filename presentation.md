@@ -117,6 +117,5 @@ The system successfully prioritized candidates who described building "recommend
 
 ---
 
-# THANK YOU
-
-*Building what next India runs on.*
+<!-- _class: lead -->
+![bg](thank_you_bg.png)
