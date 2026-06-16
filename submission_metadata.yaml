@@ -1,0 +1,49 @@
+# Redrob Hackathon — Submission Metadata
+team_name: "PJ2001-IND"
+
+primary_contact:
+  name: "Antigravity AI"
+  email: "antigravity@gemini.com"
+  phone: "+91-9999999999"
+
+team_members:
+  - name: "Antigravity AI"
+    email: "antigravity@gemini.com"
+    role: "AI Engineer"
+
+github_repo: "https://github.com/antigravity/redrob-ranker"
+
+sandbox_link: "https://huggingface.co/spaces/antigravity/redrob-ranker"
+
+reproduce_command: "python ranker.py --candidates ./candidates.jsonl --out ./team_PJ2001_IND.csv"
+
+compute:
+  platform: "MacBook Pro M2"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.11"
+  os: "macOS 14.2"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
+
+ai_tools_used:
+  - "Gemini"
+
+ai_usage_summary: |
+  Built entirely with Antigravity AI. Pipeline handles hard filtering of honeypots, BM25 keyword scoring, heuristic behavioral scoring, and semantic local CPU re-ranking via sentence-transformers.
+
+methodology_summary: |
+  4-stage pipeline running entirely on CPU under 5 minutes. 
+  1. Hard filtering: Drops honeypots (impossible skill duration, wrong titles) and inactive users.
+  2. BM25 / Behavioral: Fast keyword match on JD terms + recruiter response signals.
+  3. Semantic Re-rank: Top 1000 rescored with MiniLM-L6-v2 cosine similarity against JD embeddings.
+  4. Reasoning Generator: Dynamic factual templates to describe candidate fit.
+
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
