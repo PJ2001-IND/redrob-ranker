@@ -8,67 +8,115 @@ backgroundColor: #f8f9fa
 
 # Redrob Candidate Ranker
 ### India Runs: Data & AI Challenge
-Team PJ2001-IND
+
+**Team Name:** Data Enthusiast
+**Team Leader:** Praasuk Jain
+**Problem Statement:** Recruiters miss perfect candidates because legacy systems rely on rigid keyword matching instead of understanding true fit and availability.
 
 ---
 
-## 1. The Problem: Keywords vs. True Fit
+# Solution Overview
 
-Recruiters spend countless hours parsing through 100,000+ candidates but still miss the right person because legacy hiring tools rely on **rigid keyword filtering**.
+**What is your proposed solution?**
+A 4-stage intelligent pipeline that filters out honeypots, scores candidates using behavioral signals and BM25 keywords, and semantically re-ranks the top candidates using a local NLP embedding model.
 
-- **The Trap:** A "Marketing Manager" with "AI" sprinkled in their summary will rank higher than a seasoned engineer who uses alternative terminology.
-- **The Reality:** True fit comes from understanding career trajectories, behavioral signals, and semantic relevance to the role.
-
----
-
-## 2. Our Solution: A 4-Stage Intelligent Pipeline
-
-We built a CPU-optimized, scalable pipeline that ranks 100,000 candidates in under **18 seconds** without needing external API calls.
-
-1. **Hard Filtering & Honeypot Evasion**
-2. **Behavioral Scoring (Redrob Signals)**
-3. **BM25 Keyword Matching**
-4. **Semantic Re-Ranking (Local NLP)**
+**What differentiates your approach?**
+Instead of just matching keywords, we evaluate a candidate's *actual availability* (via Redrob signals like response rate) and their *conceptual fit* (via dense vector embeddings of their summary), completely avoiding the trap of keyword-stuffing.
 
 ---
 
-## 3. Stage 1: Hard Filtering & Honeypots
+# JD Understanding & Candidate Evaluation
 
-To dramatically cut down the search space and avoid traps:
-- **Honeypot Evasion:** We built rules to instantly disqualify candidates who claim `expert` proficiency in skills they have `0` months of experience using.
-- **Title Validation:** Filtered out keyword-stuffing non-engineers (e.g., Marketing Managers).
-- **Service Company Check:** Aligned with the Job Description's preference for product-company experience over pure service-company backgrounds.
+**What are the key requirements extracted?**
+Core competencies (embeddings, retrieval, python), product-company experience (vs pure service), and minimum 3 years of experience.
 
----
-
-## 4. Stage 2: Behavioral & BM25 Scoring
-
-- **Redrob Behavioral Signals:** A candidate might look perfect on paper, but if they haven't logged in for 6 months or respond to 5% of messages, they are effectively unavailable. We multiply scores based on `recruiter_response_rate`, `github_activity_score`, and `notice_period_days`.
-- **BM25 Search:** A blazing-fast probabilistic information retrieval algorithm that scores resumes against core JD requirements (e.g., `embeddings`, `retrieval`, `vector database`).
+**Which candidate signals are most important?**
+Beyond skills, we heavily weigh behavioral signals: `recruiter_response_rate`, `notice_period_days`, and `github_activity_score`. A candidate who matches perfectly but never responds is penalized, reflecting real-world recruiter priorities.
 
 ---
 
-## 5. Stage 3: Semantic Re-Ranking
+# Ranking Methodology
 
-For the top 1000 candidates filtered by BM25 and Behavioral metrics, we apply true AI understanding:
-- **Local NLP Model:** We deployed `sentence-transformers/all-MiniLM-L6-v2` locally to generate dense embeddings.
-- **Cosine Similarity:** Computed the semantic distance between the candidate's career summary and the core requirements of the JD.
-- **Result:** We capture candidates who describe their work conceptually (e.g., "built a recommendation engine") even if they don't use the exact keywords requested.
+**How does your system retrieve, score, and rank?**
+1. **Hard Filter:** Drops candidates with `<3` YoE or honeypot traps.
+2. **Scoring:** BM25 (keyword frequency) mixed with Behavioral multipliers.
+3. **Re-Ranking:** The top 1000 are semantically scored against the JD.
+
+**What models/algorithms are used?**
+We use `sentence-transformers/all-MiniLM-L6-v2` for generating embeddings and Cosine Similarity to measure semantic distance.
+
+**How are multiple signals combined?**
+Final Score = (Semantic Score) + (BM25 Score) * (Behavioral Multiplier).
 
 ---
 
-## 6. Stage 4: Tie-Breaking & Factual Reasoning
+# Explainability & Data Validation
 
-- **Strict Tie-Breaking:** Deterministically handled tied scores by sorting via `candidate_id` as per challenge guidelines.
-- **Dynamic Reasoning Generator:** To assist human reviewers in Stage 4, we generate a 1-2 sentence factual explanation for the top 100 candidates based entirely on their real profile data (e.g., Years of Experience, Notice Period, Response Rate). No hallucinations.
+**How are ranking decisions explained?**
+Our pipeline dynamically generates a 1-2 sentence factual explanation for the top 100 candidates outlining exactly why they were ranked (e.g., their YoE, matching core skills, and strong response rate).
+
+**How do you prevent hallucinations?**
+No generative LLMs are used for the reasoning. The explanations are deterministically generated from verifiable data points within the candidate's JSON profile.
+
+**Handling inconsistent profiles?**
+We actively penalize "honeypots" — candidates who claim `expert` proficiency but have `0` duration of experience with that skill. We also filter out non-engineering titles (e.g., Marketing Manager).
 
 ---
 
-## 7. Final Results & Impact
+# End-to-End Workflow
 
-- **Scale:** Successfully evaluated **100,000 candidates**.
-- **Speed:** Total runtime of **17.62 seconds** on a standard CPU.
-- **Efficiency:** Fits comfortably within the 16GB RAM / 5-minute constraint.
-- **Output:** A pristine `team_PJ2001_IND.csv` containing the Top 100 highest-quality, verifiable fits for the Senior AI Engineer role.
+1. **Ingest:** Stream `candidates.jsonl` (handles massive files efficiently without loading entirely into RAM).
+2. **Filter & Evade:** Instantly discard unqualified profiles and honeypots.
+3. **Retrieve:** Run BM25 algorithms to pull the Top 1,000 matches.
+4. **Embed:** Convert candidate summaries into dense vectors using our local NLP model.
+5. **Re-Rank:** Score via Cosine Similarity against the Job Description.
+6. **Output:** Generate `team_PJ2001_IND.csv` with final rankings and generated reasoning.
+
+---
+
+# System Architecture
+
+- **Data Layer:** Streaming JSONL parser.
+- **Filtering Engine:** Boolean logic rules and dictionary lookups.
+- **Retrieval Engine:** Custom BM25 implementation for lightning-fast keyword relevance.
+- **NLP Engine:** HuggingFace `sentence-transformers` running natively on CPU.
+- **Output Layer:** CSV writer with tie-breaking stability sorting by `candidate_id`.
+
+*(Everything runs 100% locally. No external API calls are made.)*
+
+---
+
+# Results & Performance
+
+**What results demonstrate ranking quality?**
+The system successfully prioritized candidates who described building "recommendation engines" or "vector DBs" conceptually, even if they didn't explicitly list the exact keywords requested in the JD, proving semantic understanding.
+
+**How does it meet compute constraints?**
+- **Scale:** Successfully evaluated the entire 100,000 candidate dataset.
+- **Speed:** Total end-to-end runtime of **17.62 seconds** on a standard CPU.
+- **Memory:** Peaked well below the 16GB limit due to lazy-loading and stream processing. 
+
+---
+
+# Technologies Used
+
+- **Python (3.11+):** Core pipeline execution.
+- **Sentence-Transformers:** For generating semantic embeddings. Chosen because `all-MiniLM-L6-v2` is extremely fast on CPU while maintaining high contextual accuracy.
+- **Scikit-Learn:** For computing Cosine Similarity arrays efficiently.
+- **Streamlit:** For building the interactive sandbox web interface.
+- **Hugging Face Spaces:** Used to host the live Sandbox environment.
+
+---
+
+# Submission Assets
+
+- **Live Sandbox Demo:** https://huggingface.co/spaces/praasukjain2001/redrob-ranker
+- **GitHub Repository:** https://github.com/PJ2001-IND/redrob-ranker
+- **Output File:** `team_PJ2001_IND.csv`
+- **Metadata:** `submission_metadata.yaml`
+
+---
+
+# THANK YOU
 
 *Building what next India runs on.*
