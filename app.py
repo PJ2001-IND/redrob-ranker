@@ -4,6 +4,7 @@ import json
 import time
 import os
 import subprocess
+import plotly.graph_objects as go
 
 st.set_page_config(page_title="AI Recruiter Dashboard | Redrob", layout="wide", page_icon="🤖")
 
@@ -18,7 +19,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🤖 Redrob AI Recruiter Dashboard (X-Ray Edition)")
+st.title("🤖 Redrob AI Recruiter Dashboard (Omni-Tier Edition)")
 st.markdown("**Welcome to the Future of Hiring.** Upload `small_candidates.jsonl` to run the state-of-the-art Psychological AI pipeline.")
 
 uploaded_file = st.file_uploader("Upload Candidates (JSONL)", type="jsonl")
@@ -41,7 +42,6 @@ if uploaded_file is not None:
             
             df = pd.read_csv("temp_submission.csv")
             
-            # Load candidate details
             cand_dict = {}
             with open("temp_candidates.jsonl", "r") as f:
                 for line in f:
@@ -61,7 +61,7 @@ if uploaded_file is not None:
                 company = profile.get("current_company", "")
                 
                 reasoning_full = str(row['reasoning'])
-                xray_data = {"inflation": "Unknown", "velocity": "Unknown", "elite": "Unknown"}
+                xray_data = {"inflation": "Unknown", "velocity": "Unknown", "elite": "Unknown", "leadership": "Unknown"}
                 reasoning_text = reasoning_full
                 
                 if " | XRAY:" in reasoning_full:
@@ -90,12 +90,42 @@ if uploaded_file is not None:
                     </div>
                     ''', unsafe_allow_html=True)
                     
-                    with st.expander("🔍 Open AI X-Ray Vision (Psychological Profile)"):
-                        st.markdown("**Under-the-Hood Metrics:**")
-                        col1, col2, col3 = st.columns(3)
-                        col1.metric("Resume Inflation Risk", xray_data.get('inflation', 'N/A'))
-                        col2.metric("Career Velocity", xray_data.get('velocity', 'N/A'))
-                        col3.metric("Company Tier", xray_data.get('elite', 'N/A'))
+                    with st.expander("🔍 Open AI X-Ray Vision & Radar Chart"):
+                        col1, col2 = st.columns([1, 1])
+                        
+                        with col1:
+                            st.markdown("**Psychological Metrics:**")
+                            st.write(f"- **Resume Inflation Risk:** {xray_data.get('inflation', 'N/A')}")
+                            st.write(f"- **Career Velocity:** {xray_data.get('velocity', 'N/A')}")
+                            st.write(f"- **Company Tier:** {xray_data.get('elite', 'N/A')}")
+                            st.write(f"- **Leadership Bias:** {xray_data.get('leadership', 'N/A')}")
+                            
+                        with col2:
+                            categories = ['Semantic Match', 'Career Stability', 'Action Bias', 'Modesty', 'Velocity']
+                            
+                            sem = min(100, max(20, xray_data.get('semantic_score', 50) * 10))
+                            stab = min(100, (xray_data.get('stability', 1.0) / 1.2) * 100)
+                            lead_val = 100 if "High" in xray_data.get('leadership', '') else (50 if "Balanced" in xray_data.get('leadership', '') else 20)
+                            mod_val = min(100, xray_data.get('modesty_score', 1.0) * 100)
+                            vel_val = 100 if "Top" in xray_data.get('velocity', '') else (80 if "High" in xray_data.get('velocity', '') else 50)
+                            
+                            values = [sem, stab, lead_val, mod_val, vel_val]
+                            
+                            fig = go.Figure()
+                            fig.add_trace(go.Scatterpolar(
+                                r=values,
+                                theta=categories,
+                                fill='toself',
+                                name=f"{fname}'s Profile",
+                                line_color='#6c63ff'
+                            ))
+                            fig.update_layout(
+                                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                                showlegend=False,
+                                margin=dict(l=20, r=20, t=20, b=20),
+                                height=250
+                            )
+                            st.plotly_chart(fig, use_container_width=True)
                     st.write("")
                     
             with open("temp_submission.csv", "rb") as file:

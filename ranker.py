@@ -144,6 +144,45 @@ def compute_lifelong_learner_index(cand):
         except: pass
     return bonus
 
+# OMNI-ARCHITECTURE ADDITIONS
+LEADERSHIP_VERBS = {"architected", "spearheaded", "engineered", "led", "directed", "managed", "founded", "created", "built", "designed", "optimized"}
+PASSIVE_VERBS = {"participated", "helped", "assisted", "supported", "contributed"}
+
+def compute_leadership_score(cand):
+    history = cand.get("career_history", [])
+    active_count = 0
+    passive_count = 0
+    for job in history:
+        desc = str(job.get("description", "")).lower()
+        for v in LEADERSHIP_VERBS:
+            if v in desc: active_count += 1
+        for v in PASSIVE_VERBS:
+            if v in desc: passive_count += 1
+            
+    if active_count > (passive_count * 2) and active_count > 2: return 1.15
+    if passive_count > active_count: return 0.95
+    return 1.0
+
+def compute_consistency_score(cand):
+    history = cand.get("career_history", [])
+    if len(history) < 2: return 1.0
+    ai_keywords = ["ml", "ai", "machine learning", "data", "python", "model"]
+    jobs_with_ai = 0
+    for job in history:
+        desc = str(job.get("description", "")).lower()
+        title = str(job.get("title", "")).lower()
+        text = desc + " " + title
+        if any(kw in text for kw in ai_keywords):
+            jobs_with_ai += 1
+    if jobs_with_ai >= 3: return 1.1
+    return 1.0
+
+def compute_geo_score(cand):
+    loc = str(cand.get("profile", {}).get("location", "")).lower()
+    if any(x in loc for x in ["india", "ind", "bangalore", "mumbai", "delhi", "hyderabad"]): return 1.1
+    if "remote" in loc: return 1.05
+    return 1.0
+
 def compute_behavioral_score(cand):
     signals = cand.get("redrob_signals", {})
     score = 0.0
@@ -168,8 +207,11 @@ def compute_behavioral_score(cand):
     promo_bonus = compute_promotion_bonus(cand)
     dk_penalty = compute_dunning_kruger_penalty(cand)
     elite_bonus = compute_elite_alumni_bonus(cand)
+    leadership_bonus = compute_leadership_score(cand)
+    consistency_bonus = compute_consistency_score(cand)
+    geo_bonus = compute_geo_score(cand)
     
-    return score * stability * learner_idx * promo_bonus * dk_penalty * elite_bonus
+    return score * stability * learner_idx * promo_bonus * dk_penalty * elite_bonus * leadership_bonus * consistency_bonus * geo_bonus
 
 def extract_text_for_bm25(cand):
     text = []
@@ -236,6 +278,12 @@ def get_velocity_label(cand):
 
 def get_elite_status(cand):
     return "⭐ Elite Alumni" if compute_elite_alumni_bonus(cand) > 1.0 else "Standard"
+    
+def get_leadership_label(cand):
+    score = compute_leadership_score(cand)
+    if score >= 1.1: return "🔥 High (Action-Oriented)"
+    if score < 1.0: return "🧊 Passive"
+    return "⚖️ Balanced"
 
 def generate_reasoning(cand, rrf_score):
     profile = cand.get("profile", {})
@@ -250,7 +298,11 @@ def generate_reasoning(cand, rrf_score):
     xray_data = {
         "inflation": get_inflation_risk_label(cand),
         "velocity": get_velocity_label(cand),
-        "elite": get_elite_status(cand)
+        "elite": get_elite_status(cand),
+        "leadership": get_leadership_label(cand),
+        "stability": round(compute_career_stability(cand), 2),
+        "modesty_score": round(2.0 - compute_dunning_kruger_penalty(cand), 2),
+        "semantic_score": round(float(rrf_score * 1000), 2)
     }
     xray_str = json.dumps(xray_data)
     
@@ -303,7 +355,7 @@ def main():
     
     print(f"Pass 3: Bi-Encoder Semantic Re-Ranking (Top 1000)... Time: {time.time() - start_time:.2f}s")
     bi_model = SentenceTransformer('all-MiniLM-L6-v2')
-    jd_summary = "Senior AI Engineer. Product company. Embeddings, retrieval, vector database, ranking, evaluation frameworks, NDCG, MRR, python."
+    jd_summary = "Represent the query for retrieving software engineers: Senior AI Engineer. Product company. Embeddings, retrieval, vector database, ranking, evaluation frameworks, NDCG, MRR, python."
     jd_emb = bi_model.encode(jd_summary)
     
     cand_summaries_1000 = []
