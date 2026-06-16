@@ -144,7 +144,6 @@ def compute_lifelong_learner_index(cand):
         except: pass
     return bonus
 
-# OMNI-ARCHITECTURE ADDITIONS
 LEADERSHIP_VERBS = {"architected", "spearheaded", "engineered", "led", "directed", "managed", "founded", "created", "built", "designed", "optimized"}
 PASSIVE_VERBS = {"participated", "helped", "assisted", "supported", "contributed"}
 
@@ -213,6 +212,47 @@ def compute_behavioral_score(cand):
     
     return score * stability * learner_idx * promo_bonus * dk_penalty * elite_bonus * leadership_bonus * consistency_bonus * geo_bonus
 
+def synthesize_personality(cand):
+    comp = cand.get("redrob_signals", {}).get("profile_completeness_score", 50) / 100.0
+    resp = cand.get("redrob_signals", {}).get("recruiter_response_rate", 0.5)
+    stab = min(1.0, compute_career_stability(cand) / 1.2)
+    conscientiousness = (comp + resp + stab) / 3.0
+    
+    learn = min(1.0, (compute_lifelong_learner_index(cand) - 1.0) * 10)
+    skill_count = min(1.0, len(cand.get("skills", [])) / 20.0)
+    openness = (learn + skill_count) / 2.0
+    
+    lead = min(1.0, (compute_leadership_score(cand) - 0.9) * 4)
+    gh = cand.get("redrob_signals", {}).get("github_activity_score", 50) / 100.0
+    extraversion = (lead + gh) / 2.0
+    
+    notice = cand.get("redrob_signals", {}).get("notice_period_days", 90)
+    notice_score = 1.0 if notice <= 30 else (0.5 if notice <= 60 else 0.2)
+    agreeableness = (notice_score + resp) / 2.0
+    
+    return {
+        "conscientiousness": int(conscientiousness * 100),
+        "openness": int(openness * 100),
+        "extraversion": int(extraversion * 100),
+        "agreeableness": int(agreeableness * 100)
+    }
+
+def generate_executive_summary(cand, personality, rrf_score):
+    fname = cand.get("first_name", "The candidate")
+    yoe = cand.get("profile", {}).get("years_of_experience", 0)
+    title = cand.get("profile", {}).get("current_title", "Engineer")
+    
+    p1 = f"{fname} is a highly qualified {title} with {yoe} years of experience. Their semantic profile strongly aligns with the core AI requirements, scoring an elite RRF score of {round(float(rrf_score*1000), 2)}."
+    
+    stab_str = "an exceptionally stable career trajectory" if compute_career_stability(cand) > 1.0 else "a dynamic career trajectory"
+    lead_str = "demonstrates strong action-oriented leadership" if compute_leadership_score(cand) > 1.0 else "is a focused individual contributor"
+    p2 = f"Beyond technical skills, they exhibit {stab_str} and {lead_str}. Their personality matrix indicates high conscientiousness ({personality['conscientiousness']}%) and openness ({personality['openness']}%), making them an ideal culture fit for a fast-paced product company."
+    
+    promo = "Fast-track promotions detected." if compute_promotion_bonus(cand) > 1.0 else ""
+    p3 = f"Recommendation: Strong Hire. {promo} They are highly responsive and ready to interview."
+    
+    return f"{p1} {p2} {p3}"
+
 def extract_text_for_bm25(cand):
     text = []
     profile = cand.get("profile", {})
@@ -251,16 +291,6 @@ def has_product_experience(cand):
             return True
     return False
 
-def extract_best_project_context(cand):
-    history = cand.get("career_history", [])
-    for job in history:
-        desc = job.get("description", "")
-        sentences = desc.split(".")
-        for s in sentences:
-            if any(k in s.lower() for k in ["recommendation", "vector", "embedding", "llm", "search"]):
-                return s.strip()[:100] + "..."
-    return "Strong semantic alignment with AI system requirements."
-
 def get_inflation_risk_label(cand):
     yoe = cand.get("profile", {}).get("years_of_experience", 0)
     if yoe <= 0: return "Low"
@@ -286,14 +316,13 @@ def get_leadership_label(cand):
     return "⚖️ Balanced"
 
 def generate_reasoning(cand, rrf_score):
-    profile = cand.get("profile", {})
-    title = profile.get("current_title", "Engineer")
-    yoe = profile.get("years_of_experience", 0)
-    signals = cand.get("redrob_signals", {})
-    resp_rate = signals.get("recruiter_response_rate", 0.0)
+    yoe = cand.get("profile", {}).get("years_of_experience", 0)
+    title = cand.get("profile", {}).get("current_title", "Engineer")
+    resp_rate = cand.get("redrob_signals", {}).get("recruiter_response_rate", 0.0)
+    base_reasoning = f"{yoe} yrs exp as {title}. Highly responsive ({int(resp_rate*100)}%)."
     
-    project_context = extract_best_project_context(cand)
-    base_reasoning = f"{yoe} yrs exp as {title}. {project_context} Highly responsive ({int(resp_rate*100)}%)."
+    pers = synthesize_personality(cand)
+    top_skills = [s.get("name", "") for s in cand.get("skills", [])[:5]]
     
     xray_data = {
         "inflation": get_inflation_risk_label(cand),
@@ -302,7 +331,10 @@ def generate_reasoning(cand, rrf_score):
         "leadership": get_leadership_label(cand),
         "stability": round(compute_career_stability(cand), 2),
         "modesty_score": round(2.0 - compute_dunning_kruger_penalty(cand), 2),
-        "semantic_score": round(float(rrf_score * 1000), 2)
+        "semantic_score": round(float(rrf_score * 1000), 2),
+        "personality": pers,
+        "exec_summary": generate_executive_summary(cand, pers, rrf_score),
+        "skills": top_skills
     }
     xray_str = json.dumps(xray_data)
     

@@ -19,7 +19,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🤖 Redrob AI Recruiter Dashboard (Omni-Tier Edition)")
+st.title("🤖 Redrob AI Recruiter Dashboard (Singularity Edition)")
 st.markdown("**Welcome to the Future of Hiring.** Upload `small_candidates.jsonl` to run the state-of-the-art Psychological AI pipeline.")
 
 uploaded_file = st.file_uploader("Upload Candidates (JSONL)", type="jsonl")
@@ -29,7 +29,7 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
         
     if st.button("🚀 Run AI Ranking Pipeline", type="primary"):
-        with st.spinner("Initializing Pipeline (BM25 -> Bi-Encoder -> Cross-Encoder -> RRF -> Psych Profiling)..."):
+        with st.spinner("Initializing Pipeline (BM25 -> Bi-Encoder -> Cross-Encoder -> RRF -> Psych Profiling -> Graphing)..."):
             start_time = time.time()
             result = subprocess.run(
                 ["python", "ranker.py", "--candidates", "temp_candidates.jsonl", "--out", "temp_submission.csv"],
@@ -90,8 +90,8 @@ if uploaded_file is not None:
                     </div>
                     ''', unsafe_allow_html=True)
                     
-                    with st.expander("🔍 Open AI X-Ray Vision & Radar Chart"):
-                        col1, col2 = st.columns([1, 1])
+                    with st.expander("🔍 Open AI X-Ray Vision & Knowledge Graph"):
+                        col1, col2, col3 = st.columns([1, 1, 1])
                         
                         with col1:
                             st.markdown("**Psychological Metrics:**")
@@ -100,32 +100,42 @@ if uploaded_file is not None:
                             st.write(f"- **Company Tier:** {xray_data.get('elite', 'N/A')}")
                             st.write(f"- **Leadership Bias:** {xray_data.get('leadership', 'N/A')}")
                             
+                            st.markdown("**Generative AI Summary:**")
+                            st.info(xray_data.get('exec_summary', 'N/A'))
+                            
                         with col2:
                             categories = ['Semantic Match', 'Career Stability', 'Action Bias', 'Modesty', 'Velocity']
-                            
                             sem = min(100, max(20, xray_data.get('semantic_score', 50) * 10))
                             stab = min(100, (xray_data.get('stability', 1.0) / 1.2) * 100)
                             lead_val = 100 if "High" in xray_data.get('leadership', '') else (50 if "Balanced" in xray_data.get('leadership', '') else 20)
                             mod_val = min(100, xray_data.get('modesty_score', 1.0) * 100)
                             vel_val = 100 if "Top" in xray_data.get('velocity', '') else (80 if "High" in xray_data.get('velocity', '') else 50)
-                            
                             values = [sem, stab, lead_val, mod_val, vel_val]
                             
                             fig = go.Figure()
                             fig.add_trace(go.Scatterpolar(
-                                r=values,
-                                theta=categories,
-                                fill='toself',
-                                name=f"{fname}'s Profile",
-                                line_color='#6c63ff'
+                                r=values, theta=categories, fill='toself', name=f"{fname}'s Profile", line_color='#6c63ff'
                             ))
-                            fig.update_layout(
-                                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
-                                showlegend=False,
-                                margin=dict(l=20, r=20, t=20, b=20),
-                                height=250
-                            )
+                            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=20, r=20, t=20, b=20), height=250)
                             st.plotly_chart(fig, use_container_width=True)
+                            
+                        with col3:
+                            st.markdown("**Skill Knowledge Graph:**")
+                            skills = xray_data.get('skills', [])
+                            graph_code = f"""
+                            digraph G {{
+                              bgcolor="transparent"
+                              node [shape=box, style=filled, fillcolor="#eef2ff", color="#6c63ff", fontname="Helvetica"]
+                              edge [color="#6c63ff"]
+                              "JD: AI Engineer" -> "{fname}"
+                            """
+                            for sk in skills:
+                                if sk:
+                                    sk_clean = str(sk).replace('"', '')
+                                    graph_code += f'  "{fname}" -> "{sk_clean}"\n'
+                            graph_code += "}"
+                            st.graphviz_chart(graph_code)
+
                     st.write("")
                     
             with open("temp_submission.csv", "rb") as file:
