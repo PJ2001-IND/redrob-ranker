@@ -7,7 +7,7 @@ import numpy as np
 from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer, CrossEncoder
 
-# 1. Dynamic Knowledge Graph (Query Expansion)
+# 1. Dynamic Knowledge Graph
 KNOWLEDGE_GRAPH = {
     "llm": ["llm", "gpt", "llama", "langchain", "claude", "transformers", "generative ai"],
     "vector database": ["vector database", "pinecone", "milvus", "qdrant", "weaviate", "chroma"],
@@ -76,11 +76,38 @@ def compute_career_stability(cand):
     
     if valid_roles == 0: return 1.0
     avg_tenure = total_months / valid_roles
-    if avg_tenure < 12: return 0.8  # hopper
-    if avg_tenure > 24: return 1.2  # stable
+    if avg_tenure < 12: return 0.8
+    if avg_tenure > 24: return 1.2
     return 1.0
 
-# 3. Lifelong Learner Index
+# 3. Internal Promotion Detector (High Velocity Performer)
+def compute_promotion_bonus(cand):
+    history = cand.get("career_history", [])
+    if len(history) < 2: return 1.0
+    
+    promotions = 0
+    for i in range(len(history) - 1):
+        curr_job = history[i]
+        prev_job = history[i+1]
+        c_comp = curr_job.get("company", "").lower().strip()
+        p_comp = prev_job.get("company", "").lower().strip()
+        c_title = curr_job.get("title", "").lower()
+        p_title = prev_job.get("title", "").lower()
+        
+        if c_comp and c_comp == p_comp and c_title != p_title:
+            senior_words = ["senior", "sr", "lead", "principal", "manager", "director", "head", "staff"]
+            c_is_senior = any(w in c_title for w in senior_words)
+            p_is_senior = any(w in p_title for w in senior_words)
+            if c_is_senior and not p_is_senior:
+                promotions += 1
+            elif "ii" in c_title and "i" in p_title and "iii" not in p_title:
+                promotions += 1
+            elif "iii" in c_title and "ii" in p_title:
+                promotions += 1
+                
+    return min(1.0 + (promotions * 0.1), 1.3)
+
+# 4. Lifelong Learner Index
 def compute_lifelong_learner_index(cand):
     bonus = 1.0
     edu = cand.get("education", [])
@@ -119,8 +146,10 @@ def compute_behavioral_score(cand):
         
     stability = compute_career_stability(cand)
     learner_idx = compute_lifelong_learner_index(cand)
-    return score * stability * learner_idx
+    promo_bonus = compute_promotion_bonus(cand)
+    return score * stability * learner_idx * promo_bonus
 
+# 5. Exponential Skill Decay / Time-aware text extraction
 def extract_text_for_bm25(cand):
     text = []
     profile = cand.get("profile", {})
@@ -128,14 +157,21 @@ def extract_text_for_bm25(cand):
     text.append(profile.get("summary", ""))
     
     history = cand.get("career_history", [])
-    for i, job in enumerate(history):
-        title = job.get("title", "")
-        desc = job.get("description", "")
-        if i == 0:
+    for job in history:
+        title = job.get("title", "") or ""
+        desc = job.get("description", "") or ""
+        end = job.get("end_date", "") or ""
+        
+        # Skill Decay Implementation: Repeat recent context more often
+        repeats = 1
+        if end == "Present" or "2024" in end or "2025" in end:
+            repeats = 3
+        elif any(str(y) in end for y in range(2020, 2024)):
+            repeats = 2
+            
+        for _ in range(repeats):
             text.append(title)
             text.append(desc)
-        text.append(title)
-        text.append(desc)
         
     for skill in cand.get("skills", []):
         text.append(skill.get("name", ""))
@@ -153,7 +189,6 @@ def has_product_experience(cand):
             return True
     return False
 
-# 4. Hyper-Personalized Reasoning Extraction
 def extract_best_project_context(cand):
     history = cand.get("career_history", [])
     for job in history:
@@ -172,9 +207,10 @@ def generate_reasoning(cand, rrf_score):
     resp_rate = signals.get("recruiter_response_rate", 0.0)
     
     project_context = extract_best_project_context(cand)
+    promo = "Fast-track promotions." if compute_promotion_bonus(cand) > 1.0 else ""
     learner = "Lifelong Learner." if compute_lifelong_learner_index(cand) > 1.0 else ""
     
-    return f"{yoe} yrs exp as {title}. {project_context} Highly responsive ({int(resp_rate*100)}%). {learner}"
+    return f"{yoe} yrs exp as {title}. {project_context} Highly responsive ({int(resp_rate*100)}%). {promo} {learner}".strip()
 
 def main():
     parser = argparse.ArgumentParser()
@@ -250,7 +286,8 @@ def main():
     rrf_scores = []
     for i in range(200):
         rrf = 1.0 / (k + bm25_ranks_200[i] + 1) + 1.0 / (k + cross_ranks_200[i] + 1)
-        rrf_scores.append((rrf, top_200_candidates[i]))
+        display_score = round(float(rrf * 1000), 4)
+        rrf_scores.append((display_score, top_200_candidates[i]))
         
     rrf_scores.sort(key=lambda x: (-x[0], x[1]["candidate_id"]))
     
@@ -264,8 +301,7 @@ def main():
         for rank, (cand, score) in enumerate(zip(final_100_candidates, final_100_scores), 1):
             cid = cand.get("candidate_id")
             reasoning = generate_reasoning(cand, score)
-            display_score = round(float(score * 1000), 4)
-            writer.writerow([cid, rank, display_score, reasoning])
+            writer.writerow([cid, rank, score, reasoning])
             
     print(f"Done! Total time: {time.time() - start_time:.2f}s")
 

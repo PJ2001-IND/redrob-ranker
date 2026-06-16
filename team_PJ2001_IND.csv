@@ -1,101 +1,101 @@
 candidate_id,rank,score,reasoning
-CAND_0055992,1,27.3466,"16.9 yrs exp as AI Engineer. Built the document ingestion pipeline (chunking, embedding via OpenAI embeddings, storing in Pinecon... Highly responsive (72%). "
-CAND_0044222,2,25.3442,7.7 yrs exp as AI Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (60%). Lifelong Learner.
-CAND_0012957,3,24.3258,"4.9 yrs exp as Search Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (67%). Lifelong Learner."
-CAND_0050454,4,22.5275,6.8 yrs exp as AI Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (77%). Lifelong Learner.
-CAND_0062247,5,21.9631,7.3 yrs exp as AI Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (78%). 
-CAND_0011162,6,21.8889,"5.8 yrs exp as Recommendation Systems Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (75%). Lifelong Learner."
-CAND_0099806,7,21.8364,4.6 yrs exp as AI Engineer. Strong semantic alignment with AI system requirements. Highly responsive (76%). 
-CAND_0061339,8,21.1362,4.2 yrs exp as Search Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (90%). 
-CAND_0013536,9,20.7428,14.1 yrs exp as Applied ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (87%). 
-CAND_0079284,10,20.727,4.9 yrs exp as Machine Learning Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (79%). Lifelong Learner.
-CAND_0030827,11,20.6853,"5.4 yrs exp as Senior Data Scientist. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (52%). Lifelong Learner."
-CAND_0065195,12,20.4497,"5.1 yrs exp as Search Engineer. Built the document ingestion pipeline (chunking, embedding via OpenAI embeddings, storing in Pinecon... Highly responsive (80%). Lifelong Learner."
-CAND_0091534,13,19.6154,"16.6 yrs exp as AI Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (84%). "
-CAND_0064904,14,18.5961,4.9 yrs exp as AI Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (78%). 
-CAND_0022812,15,18.075,"4.5 yrs exp as Applied ML Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (79%). Lifelong Learner."
-CAND_0009024,16,17.1795,5.2 yrs exp as Search Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (46%). 
-CAND_0024620,17,17.1625,"5.9 yrs exp as AI Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (41%). Lifelong Learner."
-CAND_0049978,18,16.8219,6.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (71%). 
-CAND_0045027,19,16.0632,3.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (80%). Lifelong Learner.
-CAND_0082086,20,15.8611,6.0 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (85%). 
-CAND_0060886,21,15.8113,4.6 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (38%). Lifelong Learner.
-CAND_0082262,22,15.5735,5.9 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (64%). Lifelong Learner.
-CAND_0024466,23,15.1946,"5.2 yrs exp as Search Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (47%). Lifelong Learner."
-CAND_0076251,24,15.0809,7.6 yrs exp as Search Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (51%). 
-CAND_0091899,25,14.5098,5.8 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (51%). Lifelong Learner.
-CAND_0096104,26,14.3709,7.0 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (33%). Lifelong Learner.
-CAND_0010408,27,14.056,5.7 yrs exp as Junior ML Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (36%). Lifelong Learner.
-CAND_0025923,28,13.7933,5.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (84%). Lifelong Learner.
-CAND_0001930,29,13.792,6.9 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (65%). 
-CAND_0062707,30,13.6763,5.6 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (30%). Lifelong Learner.
-CAND_0058412,31,13.5997,6.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (43%). 
-CAND_0068892,32,13.5038,4.7 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (51%). Lifelong Learner.
-CAND_0059795,33,13.3581,5.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (75%). Lifelong Learner.
-CAND_0074325,34,13.1659,3.9 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (47%). 
-CAND_0061156,35,13.081,6.0 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (39%). 
-CAND_0009516,36,13.0748,6.9 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (34%). Lifelong Learner.
-CAND_0077552,37,13.0099,3.4 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (54%). Lifelong Learner.
-CAND_0088526,38,12.9754,4.6 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (80%). 
-CAND_0091348,39,12.8321,3.7 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (86%). Lifelong Learner.
-CAND_0060257,40,12.7828,5.8 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (56%). 
-CAND_0015097,41,12.4961,6.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (69%). 
-CAND_0043228,42,12.4049,"6.8 yrs exp as Applied ML Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (41%). "
-CAND_0078810,43,12.3073,6.9 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (80%). 
-CAND_0072032,44,12.2858,6.1 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (38%). 
-CAND_0004402,45,12.2244,6.0 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (83%). 
-CAND_0013665,46,12.1053,5.2 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (73%). Lifelong Learner.
-CAND_0018961,47,11.999,5.0 yrs exp as AI Specialist. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (26%). 
-CAND_0005269,48,11.9684,6.1 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (28%). Lifelong Learner.
-CAND_0010541,49,11.9621,6.2 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (59%). Lifelong Learner.
-CAND_0073007,50,11.9401,5.8 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (83%). Lifelong Learner.
-CAND_0046313,51,11.8775,5.8 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (45%). Lifelong Learner.
-CAND_0007008,52,11.8503,3.7 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (66%). Lifelong Learner.
-CAND_0066309,53,11.833,5.3 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (56%). 
-CAND_0043860,54,11.8308,6.1 yrs exp as Junior ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (81%). 
-CAND_0008218,55,11.6889,7.0 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (39%). 
-CAND_0003609,56,11.5924,6.1 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (50%). Lifelong Learner.
-CAND_0024947,57,11.5669,6.1 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (79%). 
-CAND_0075502,58,11.3895,3.3 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (30%). 
-CAND_0043312,59,11.3713,4.2 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (73%). 
-CAND_0048166,60,11.3636,5.2 yrs exp as ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (48%). Lifelong Learner.
-CAND_0002344,61,11.3491,4.7 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (83%). 
-CAND_0026942,62,11.3124,6.0 yrs exp as Junior ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (84%). Lifelong Learner.
-CAND_0074648,63,11.3074,4.1 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (82%). 
-CAND_0088878,64,11.2084,4.4 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (31%). Lifelong Learner.
-CAND_0077498,65,11.1701,5.4 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (89%). Lifelong Learner.
-CAND_0079550,66,10.9318,3.9 yrs exp as AI Specialist. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (88%). Lifelong Learner.
-CAND_0039383,67,10.8838,7.1 yrs exp as Applied ML Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (61%). 
-CAND_0060315,68,10.837,5.4 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (63%). Lifelong Learner.
-CAND_0064331,69,10.7195,4.2 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (74%). 
-CAND_0077956,70,10.6404,6.4 yrs exp as Computer Vision Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (88%). Lifelong Learner.
-CAND_0025882,71,10.5707,5.6 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (79%). Lifelong Learner.
-CAND_0061175,72,10.4232,6.7 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (48%). 
-CAND_0065139,73,10.4123,5.2 yrs exp as AI Research Engineer. Strong semantic alignment with AI system requirements. Highly responsive (82%). Lifelong Learner.
-CAND_0016657,74,10.3707,5.3 yrs exp as AI Research Engineer. Strong semantic alignment with AI system requirements. Highly responsive (52%). Lifelong Learner.
-CAND_0002793,75,10.3484,5.5 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (77%). 
-CAND_0052498,76,10.2909,4.7 yrs exp as ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (28%). Lifelong Learner.
-CAND_0098952,77,10.2645,5.5 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (66%). Lifelong Learner.
-CAND_0069638,78,10.0109,6.2 yrs exp as Computer Vision Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (64%). Lifelong Learner.
-CAND_0080315,79,10.0035,4.1 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (28%). Lifelong Learner.
-CAND_0058152,80,9.8194,3.6 yrs exp as Data Scientist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (85%). 
-CAND_0016170,81,9.7112,6.8 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (52%). 
-CAND_0019845,82,9.6617,3.4 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (78%). Lifelong Learner.
-CAND_0081480,83,9.6502,5.6 yrs exp as Computer Vision Engineer. Strong semantic alignment with AI system requirements. Highly responsive (85%). 
-CAND_0008628,84,9.595,3.2 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (54%). Lifelong Learner.
-CAND_0020350,85,9.5798,5.8 yrs exp as AI Engineer. Strong semantic alignment with AI system requirements. Highly responsive (57%). 
-CAND_0070525,86,9.551,5.4 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (93%). Lifelong Learner.
-CAND_0003841,87,9.5331,5.0 yrs exp as ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (71%). 
-CAND_0080597,88,9.2975,4.0 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (33%). Lifelong Learner.
-CAND_0084161,89,9.2825,3.9 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (77%). Lifelong Learner.
-CAND_0059520,90,9.2661,4.3 yrs exp as AI Research Engineer. Strong semantic alignment with AI system requirements. Highly responsive (36%). Lifelong Learner.
-CAND_0091229,91,9.2587,7.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (35%). 
-CAND_0091890,92,9.1813,4.7 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (49%). 
-CAND_0060835,93,9.0395,6.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (32%). 
-CAND_0031306,94,8.9565,3.0 yrs exp as Junior ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (84%). Lifelong Learner.
-CAND_0077881,95,8.9036,4.6 yrs exp as Junior ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (30%). 
-CAND_0084681,96,8.8862,3.5 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (67%). 
-CAND_0013122,97,8.8806,4.3 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (56%). Lifelong Learner.
-CAND_0012632,98,8.8701,6.0 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (53%). Lifelong Learner.
-CAND_0077261,99,8.8691,5.7 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (81%). 
-CAND_0091745,100,8.8184,5.9 yrs exp as Junior ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (53%). 
+CAND_0044222,1,27.0516,7.7 yrs exp as AI Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (60%).  Lifelong Learner.
+CAND_0055992,2,25.4856,"16.9 yrs exp as AI Engineer. Built the document ingestion pipeline (chunking, embedding via OpenAI embeddings, storing in Pinecon... Highly responsive (72%)."
+CAND_0012957,3,23.7626,"4.9 yrs exp as Search Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (67%).  Lifelong Learner."
+CAND_0050454,4,22.6142,6.8 yrs exp as AI Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (77%).  Lifelong Learner.
+CAND_0062247,5,22.2456,7.3 yrs exp as AI Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (78%).
+CAND_0099806,6,22.021,4.6 yrs exp as AI Engineer. Strong semantic alignment with AI system requirements. Highly responsive (76%).
+CAND_0013536,7,21.2042,14.1 yrs exp as Applied ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (87%).
+CAND_0061339,8,20.6349,4.2 yrs exp as Search Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (90%).
+CAND_0011162,9,20.5114,"5.8 yrs exp as Recommendation Systems Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (75%).  Lifelong Learner."
+CAND_0030827,10,20.4751,"5.4 yrs exp as Senior Data Scientist. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (52%).  Lifelong Learner."
+CAND_0091534,11,20.3934,"16.6 yrs exp as AI Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (84%)."
+CAND_0079284,12,20.2546,4.9 yrs exp as Machine Learning Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (79%).  Lifelong Learner.
+CAND_0064904,13,18.8519,4.9 yrs exp as AI Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (78%).
+CAND_0009024,14,17.0339,5.2 yrs exp as Search Engineer. Built a content recommendation system serving 10M+ users that combined collaborative filtering with ... Highly responsive (46%).
+CAND_0024620,15,16.5409,"5.9 yrs exp as AI Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (41%).  Lifelong Learner."
+CAND_0049978,16,16.3944,6.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (71%).
+CAND_0060886,17,16.0829,4.6 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (38%).  Lifelong Learner.
+CAND_0045027,18,16.0088,3.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (80%).  Lifelong Learner.
+CAND_0022812,19,15.9683,"4.5 yrs exp as Applied ML Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (79%).  Lifelong Learner."
+CAND_0082086,20,15.9508,6.0 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (85%).
+CAND_0024466,21,15.5263,"5.2 yrs exp as Search Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (47%).  Lifelong Learner."
+CAND_0082262,22,15.0779,5.9 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (64%).  Lifelong Learner.
+CAND_0076251,23,15.0083,7.6 yrs exp as Search Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (51%).
+CAND_0091899,24,14.4385,5.8 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (51%).  Lifelong Learner.
+CAND_0068892,25,14.1872,4.7 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (51%).  Lifelong Learner.
+CAND_0025923,26,14.0658,5.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (84%).  Lifelong Learner.
+CAND_0060257,27,14.0019,5.8 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (56%).
+CAND_0001930,28,13.8787,6.9 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (65%).
+CAND_0010408,29,13.8609,5.7 yrs exp as Junior ML Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (36%).  Lifelong Learner.
+CAND_0096104,30,13.5991,7.0 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (33%).  Lifelong Learner.
+CAND_0058412,31,13.5407,6.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (43%).
+CAND_0062707,32,13.2556,5.6 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (30%).  Lifelong Learner.
+CAND_0059795,33,13.2344,5.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (75%).  Lifelong Learner.
+CAND_0088526,34,13.1835,4.6 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (80%). Fast-track promotions.
+CAND_0061156,35,13.1417,6.0 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (39%).
+CAND_0015097,36,12.8625,6.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (69%).
+CAND_0077552,37,12.6173,3.4 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (54%).  Lifelong Learner.
+CAND_0091348,38,12.563,3.7 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (86%).  Lifelong Learner.
+CAND_0013665,39,12.2595,5.2 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (73%).  Lifelong Learner.
+CAND_0078810,40,12.2595,6.9 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (80%).
+CAND_0010541,41,12.229,6.2 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (59%).  Lifelong Learner.
+CAND_0005269,42,12.21,6.1 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (28%).  Lifelong Learner.
+CAND_0043312,43,12.2076,4.2 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (73%).
+CAND_0007008,44,12.1736,3.7 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (66%).  Lifelong Learner.
+CAND_0046313,45,12.0981,5.8 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (45%).  Lifelong Learner.
+CAND_0074325,46,12.0855,3.9 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (47%).
+CAND_0009516,47,12.0486,6.9 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (34%).  Lifelong Learner.
+CAND_0074648,48,12.0098,4.1 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (82%).
+CAND_0003609,49,11.9048,6.1 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (50%).  Lifelong Learner.
+CAND_0079688,50,11.7606,3.3 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (69%).  Lifelong Learner.
+CAND_0077956,51,11.6738,6.4 yrs exp as Computer Vision Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (88%).  Lifelong Learner.
+CAND_0089249,52,11.5768,3.1 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (47%).
+CAND_0004402,53,11.5596,6.0 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (83%).
+CAND_0018961,54,11.4328,5.0 yrs exp as AI Specialist. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (26%).
+CAND_0072032,55,11.3558,6.1 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (38%).
+CAND_0073007,56,11.3265,5.8 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (83%).  Lifelong Learner.
+CAND_0026942,57,11.3171,6.0 yrs exp as Junior ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (84%).  Lifelong Learner.
+CAND_0082913,58,11.2736,5.5 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (73%).
+CAND_0088878,59,11.2392,4.4 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (31%).  Lifelong Learner.
+CAND_0008218,60,11.1902,7.0 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (39%).
+CAND_0077498,61,11.0874,5.4 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (89%).  Lifelong Learner.
+CAND_0043228,62,11.0303,"6.8 yrs exp as Applied ML Engineer. Owned the ranking layer for an e-commerce search product, evolving it from a hand-tuned scoring func... Highly responsive (41%)."
+CAND_0024947,63,11.0223,6.1 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (79%).
+CAND_0043860,64,11.0203,6.1 yrs exp as Junior ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (81%).
+CAND_0075502,65,10.9718,3.3 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (30%).
+CAND_0048166,66,10.9629,5.2 yrs exp as ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (48%).  Lifelong Learner.
+CAND_0002344,67,10.9202,4.7 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (83%).
+CAND_0039383,68,10.8376,7.1 yrs exp as Applied ML Engineer. Developed a semantic search feature for an internal knowledge base of ~500K documents... Highly responsive (61%).
+CAND_0079550,69,10.7789,3.9 yrs exp as AI Specialist. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (88%).  Lifelong Learner.
+CAND_0060315,70,10.7168,5.4 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (63%).  Lifelong Learner.
+CAND_0025882,71,10.6615,5.6 yrs exp as Senior Software Engineer (ML). Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (79%).  Lifelong Learner.
+CAND_0098952,72,10.6221,5.5 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (66%).  Lifelong Learner.
+CAND_0012988,73,10.6132,4.3 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (73%).
+CAND_0003841,74,10.4847,5.0 yrs exp as ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (71%).
+CAND_0002793,75,10.3095,5.5 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (77%).
+CAND_0016657,76,10.2182,5.3 yrs exp as AI Research Engineer. Strong semantic alignment with AI system requirements. Highly responsive (52%).  Lifelong Learner.
+CAND_0070525,77,9.8941,5.4 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (93%).  Lifelong Learner.
+CAND_0061175,78,9.8934,6.7 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (48%).
+CAND_0065139,79,9.8692,5.2 yrs exp as AI Research Engineer. Strong semantic alignment with AI system requirements. Highly responsive (82%).  Lifelong Learner.
+CAND_0064331,80,9.8558,4.2 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (74%).
+CAND_0080315,81,9.7938,4.1 yrs exp as AI Research Engineer. Most of my project work has been in CV; I'm now interested in transitioning toward NLP/LLM work but ... Highly responsive (28%).  Lifelong Learner.
+CAND_0009200,82,9.7153,5.7 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (32%).
+CAND_0069638,83,9.6838,6.2 yrs exp as Computer Vision Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (64%).  Lifelong Learner.
+CAND_0014063,84,9.5887,5.4 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (69%).
+CAND_0081480,85,9.5494,5.6 yrs exp as Computer Vision Engineer. Strong semantic alignment with AI system requirements. Highly responsive (85%).
+CAND_0091890,86,9.4201,4.7 yrs exp as AI Research Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (49%).
+CAND_0084161,87,9.3511,3.9 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (77%).  Lifelong Learner.
+CAND_0060835,88,9.2898,6.6 yrs exp as Senior Software Engineer (ML). Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (32%).
+CAND_0077881,89,9.2624,4.6 yrs exp as Junior ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (30%).
+CAND_0020350,90,9.2389,5.8 yrs exp as AI Engineer. Strong semantic alignment with AI system requirements. Highly responsive (57%).
+CAND_0031306,91,9.2359,3.0 yrs exp as Junior ML Engineer. Strong semantic alignment with AI system requirements. Highly responsive (84%).  Lifelong Learner.
+CAND_0091745,92,9.2086,5.9 yrs exp as Junior ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (53%).
+CAND_0072721,93,9.2029,3.7 yrs exp as Data Scientist. Strong semantic alignment with AI system requirements. Highly responsive (53%).  Lifelong Learner.
+CAND_0056584,94,9.1015,3.5 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (69%).
+CAND_0008628,95,9.0868,3.2 yrs exp as AI Specialist. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (54%).  Lifelong Learner.
+CAND_0080597,96,9.085,4.0 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (33%).  Lifelong Learner.
+CAND_0052498,97,9.0349,4.7 yrs exp as ML Engineer. Built recommendation-style features at a mid-stage startup — lighter weight than ranking systems at ... Highly responsive (28%).  Lifelong Learner.
+CAND_0091229,98,8.9365,7.0 yrs exp as Senior Software Engineer (ML). Strong semantic alignment with AI system requirements. Highly responsive (35%).
+CAND_0059520,99,8.931,4.3 yrs exp as AI Research Engineer. Strong semantic alignment with AI system requirements. Highly responsive (36%).  Lifelong Learner.
+CAND_0012632,100,8.8279,6.0 yrs exp as AI Specialist. Strong semantic alignment with AI system requirements. Highly responsive (53%).  Lifelong Learner.
