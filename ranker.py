@@ -7,22 +7,33 @@ import numpy as np
 from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer
 
-JD_KEYWORDS = [
-    "embedding", "retrieval", "vector database", "ranking", "llm",
+# 1. Dynamic Knowledge Graph (Query Expansion)
+KNOWLEDGE_GRAPH = {
+    "llm": ["llm", "gpt", "llama", "langchain", "claude", "transformers", "generative ai"],
+    "vector database": ["vector database", "pinecone", "milvus", "qdrant", "weaviate", "chroma"],
+    "machine learning": ["machine learning", "ml", "deep learning", "neural networks"],
+    "python": ["python", "pandas", "numpy", "scikit", "flask", "fastapi"]
+}
+
+BASE_KEYWORDS = [
+    "embedding", "retrieval", "ranking",
     "fine-tuning", "a/b test", "evaluation", "ndcg", "mrr",
-    "pinecone", "milvus", "qdrant", "weaviate", "sentence-transformers",
-    "machine learning", "product", "python", "search", "recommendation"
+    "product", "search", "recommendation"
 ]
+
+def get_expanded_query():
+    query = BASE_KEYWORDS.copy()
+    for k, v in KNOWLEDGE_GRAPH.items():
+        query.extend(v)
+    return " ".join(query).split()
 
 SERVICE_COMPANIES = {"tcs", "infosys", "wipro", "accenture", "cognizant", "capgemini"}
 
 def is_honeypot(cand):
-    # 1. "Marketing Manager" with all AI keywords
     title = cand.get("profile", {}).get("current_title", "").lower()
     if title and not any(kw in title for kw in ["engineer", "developer", "scientist", "ml", "ai", "data", "software"]):
         return True
     
-    # 2. Expert proficiency with 0 duration
     skills = cand.get("skills", [])
     expert_zero_duration = 0
     for s in skills:
@@ -30,42 +41,57 @@ def is_honeypot(cand):
             expert_zero_duration += 1
     if expert_zero_duration >= 3:
         return True
-    
     return False
+
+def compute_career_stability(cand):
+    exp_list = cand.get("career_history", [])
+    if not exp_list or len(exp_list) < 2: 
+        return 1.0
+    
+    total_months = 0
+    valid_roles = 0
+    
+    for exp in exp_list:
+        start = exp.get("start_date")
+        end = exp.get("end_date")
+        if start and end and end != 'Present':
+            try:
+                sy, sm, _ = map(int, start.split('-'))
+                ey, em, _ = map(int, end.split('-'))
+                total_months += (ey - sy) * 12 + (em - sm)
+                valid_roles += 1
+            except:
+                pass
+    
+    if valid_roles == 0: return 1.0
+    avg_tenure = total_months / valid_roles
+    
+    if avg_tenure < 12: return 0.8  # Penalty for extreme job-hopping
+    if avg_tenure > 24: return 1.2  # Boost for stability
+    return 1.0
 
 def compute_behavioral_score(cand):
     signals = cand.get("redrob_signals", {})
     score = 0.0
-    
-    # Recruiter response rate (0 to 1) -> 0 to 10 points
     score += signals.get("recruiter_response_rate", 0.0) * 10
     
-    # Notice period (lower is better, max 180) -> up to 5 points
     notice = signals.get("notice_period_days", 90)
-    if notice <= 30:
-        score += 5
-    elif notice <= 60:
-        score += 2
-    else:
-        score -= 5 # Penalty for long notice
+    if notice <= 30: score += 5
+    elif notice <= 60: score += 2
+    else: score -= 5
         
-    # Interview completion rate
     score += signals.get("interview_completion_rate", 0.0) * 5
-    
-    # Profile completeness
     score += (signals.get("profile_completeness_score", 0.0) / 100.0) * 5
     
-    # GitHub activity
     gh = signals.get("github_activity_score", -1)
-    if gh > 0:
-        score += (gh / 100.0) * 10
+    if gh > 0: score += (gh / 100.0) * 10
         
-    # Inactive penalty
     last_active = signals.get("last_active_date", "2020-01-01")
-    if last_active < "2025-01-01":
-        score -= 10
+    if last_active < "2025-01-01": score -= 10
         
-    return score
+    stability = compute_career_stability(cand)
+    # Multiply behavioral score by career stability index
+    return score * stability
 
 def extract_text_for_bm25(cand):
     text = []
@@ -73,9 +99,16 @@ def extract_text_for_bm25(cand):
     text.append(profile.get("headline", ""))
     text.append(profile.get("summary", ""))
     
-    for job in cand.get("career_history", []):
-        text.append(job.get("title", ""))
-        text.append(job.get("description", ""))
+    history = cand.get("career_history", [])
+    for i, job in enumerate(history):
+        title = job.get("title", "")
+        desc = job.get("description", "")
+        # Recency Weighting: Double the weight of the most recent job
+        if i == 0:
+            text.append(title)
+            text.append(desc)
+        text.append(title)
+        text.append(desc)
         
     for skill in cand.get("skills", []):
         text.append(skill.get("name", ""))
@@ -89,15 +122,15 @@ def has_product_experience(cand):
             return True
     return False
 
-def generate_reasoning(cand, score):
+def generate_reasoning(cand, rrf_score, stability):
     profile = cand.get("profile", {})
     title = profile.get("current_title", "Engineer")
     yoe = profile.get("years_of_experience", 0)
     signals = cand.get("redrob_signals", {})
     resp_rate = signals.get("recruiter_response_rate", 0.0)
-    notice = signals.get("notice_period_days", 90)
     
-    return f"{yoe} years exp as {title}. Strong semantic fit for the JD requirements. High behavioral signal (responds to {int(resp_rate*100)}% of recruiters, {notice}d notice)."
+    stab_str = "Stable tenure" if stability >= 1.0 else "High mobility"
+    return f"{yoe} years exp as {title} ({stab_str}). High hybrid RRF score. Highly responsive ({int(resp_rate*100)}%)."
 
 def main():
     parser = argparse.ArgumentParser()
@@ -107,56 +140,47 @@ def main():
     
     start_time = time.time()
     
-    print("Pass 1: Streaming and filtering candidates...")
+    print("Pass 1: Streaming & Filtering...")
     candidates = []
     texts_for_bm25 = []
     
-    # Pre-filter logic
     with open(args.candidates, 'r') as f:
         for line in f:
             if not line.strip(): continue
             cand = json.loads(line)
             
-            # Hard filters based on JD
             yoe = cand.get("profile", {}).get("years_of_experience", 0)
-            if yoe < 3: # Keep >3 to be safe
-                continue
-                
-            if is_honeypot(cand):
-                continue
-                
-            if not has_product_experience(cand):
-                continue
+            if yoe < 3: continue
+            if is_honeypot(cand): continue
+            if not has_product_experience(cand): continue
                 
             candidates.append(cand)
             texts_for_bm25.append(extract_text_for_bm25(cand))
             
     print(f"Filtered down to {len(candidates)} candidates. Time elapsed: {time.time() - start_time:.2f}s")
     
-    print("Pass 2: BM25 Scoring...")
+    print("Pass 2: BM25 & Behavioral Scoring...")
     tokenized_corpus = [doc.split() for doc in texts_for_bm25]
     bm25 = BM25Okapi(tokenized_corpus)
-    tokenized_query = " ".join(JD_KEYWORDS).split()
-    bm25_scores = bm25.get_scores(tokenized_query)
+    tokenized_query = get_expanded_query()
+    bm25_scores = np.array(bm25.get_scores(tokenized_query))
     
-    print("Pass 2: Behavioral Scoring...")
-    behav_scores = [compute_behavioral_score(c) for c in candidates]
+    behav_scores = np.array([compute_behavioral_score(c) for c in candidates])
     
-    # Normalize BM25 and Behavioral scores to sum them
-    bm25_norm = np.array(bm25_scores)
-    if bm25_norm.max() > 0:
-        bm25_norm = bm25_norm / bm25_norm.max()
-        
-    behav_norm = np.array(behav_scores)
-    if behav_norm.max() > 0:
-        behav_norm = behav_norm / behav_norm.max()
-        
-    pass2_scores = bm25_norm * 0.6 + behav_norm * 0.4
+    # Normalize
+    if bm25_scores.max() > 0: bm25_scores = bm25_scores / bm25_scores.max()
+    if behav_scores.max() > 0: behav_scores = behav_scores / behav_scores.max()
     
-    # Get top 1000 for Pass 3
+    # Combined Pass 2 Score
+    pass2_scores = bm25_scores * 0.6 + behav_scores * 0.4
+    
+    # Top 1000 for Semantic
     top_1000_idx = np.argsort(pass2_scores)[::-1][:1000]
     top_candidates = [candidates[i] for i in top_1000_idx]
-    top_pass2_scores = pass2_scores[top_1000_idx]
+    
+    # Keep their BM25 ranks within this top 1000 subset
+    bm25_subset_scores = pass2_scores[top_1000_idx]
+    bm25_ranks = np.argsort(np.argsort(bm25_subset_scores)[::-1]) # Rank 0 is best
     
     print(f"Top 1000 selected. Time elapsed: {time.time() - start_time:.2f}s")
     
@@ -171,33 +195,35 @@ def main():
         cand_summaries.append(f"{prof.get('current_title', '')}. {prof.get('summary', '')}")
         
     cand_embs = model.encode(cand_summaries)
-    
-    # Cosine similarity
     cos_sims = np.dot(cand_embs, jd_emb) / (np.linalg.norm(cand_embs, axis=1) * np.linalg.norm(jd_emb))
     
-    # Final Score
-    final_scores = top_pass2_scores * 0.3 + cos_sims * 0.7
+    semantic_ranks = np.argsort(np.argsort(cos_sims)[::-1]) # Rank 0 is best
     
-    # Sort top 100 handling ties by candidate_id ascending
-    scored_candidates = []
-    for i in range(len(final_scores)):
-        scored_candidates.append((round(float(final_scores[i]), 4), top_candidates[i]))
+    print("Pass 4: Reciprocal Rank Fusion (RRF)...")
+    k = 60
+    rrf_scores = []
+    for i in range(1000):
+        rrf = 1.0 / (k + bm25_ranks[i] + 1) + 1.0 / (k + semantic_ranks[i] + 1)
+        rrf_scores.append((rrf, top_candidates[i]))
         
-    scored_candidates.sort(key=lambda x: (-x[0], x[1]["candidate_id"]))
+    # Sort top 100
+    rrf_scores.sort(key=lambda x: (-x[0], x[1]["candidate_id"]))
     
-    final_100_candidates = [x[1] for x in scored_candidates[:100]]
-    final_100_scores = [x[0] for x in scored_candidates[:100]]
+    final_100_candidates = [x[1] for x in rrf_scores[:100]]
+    final_100_scores = [x[0] for x in rrf_scores[:100]]
     
     print(f"Generating reasoning and saving to {args.out}...")
-    
     with open(args.out, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["candidate_id", "rank", "score", "reasoning"])
-        
         for rank, (cand, score) in enumerate(zip(final_100_candidates, final_100_scores), 1):
             cid = cand.get("candidate_id")
-            reasoning = generate_reasoning(cand, score)
-            writer.writerow([cid, rank, round(float(score), 4), reasoning])
+            stab = compute_career_stability(cand)
+            reasoning = generate_reasoning(cand, score, stab)
+            # Scale RRF score slightly for presentation, RRF is usually very small (e.g. 0.03)
+            # Multiplying by 1000 makes it readable.
+            display_score = round(float(score * 1000), 4)
+            writer.writerow([cid, rank, display_score, reasoning])
             
     print(f"Done! Total time: {time.time() - start_time:.2f}s")
 
