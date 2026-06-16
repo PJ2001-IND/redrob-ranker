@@ -1,0 +1,8 @@
+venv/
+candidates.jsonl*
+sample_candidates.json
+__pycache__/
+.DS_Store
+*.gz
+temp_candidates.jsonl
+temp_submission.csv
