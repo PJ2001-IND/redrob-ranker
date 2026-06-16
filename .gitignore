@@ -6,3 +6,11 @@ __pycache__/
 *.gz
 temp_candidates.jsonl
 temp_submission.csv
+*.docx
+job_description.txt
+README.txt
+redrob_signals_doc.txt
+submission_spec.txt
+submission_metadata_template.yaml
+candidate_schema.json
+sample_submission.csv
