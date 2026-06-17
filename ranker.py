@@ -379,6 +379,51 @@ def get_percentile_badges(cand):
     badges.append("🧠 Top 1% Semantic Match")
     return badges
 
+def predict_salary(cand):
+    yoe = cand.get("profile", {}).get("years_of_experience", 0)
+    base = 15 + (yoe * 3)
+    if compute_elite_alumni_bonus(cand) > 1.0: base *= 1.4
+    if "india" not in str(cand.get("profile", {}).get("location", "")).lower(): base *= 1.5
+    return f"₹{int(base)}L - ₹{int(base*1.3)}L LPA"
+
+def predict_trajectory(cand):
+    title = cand.get("profile", {}).get("current_title", "Engineer").lower()
+    vel = compute_promotion_bonus(cand)
+    next_role = "Senior Engineer"
+    if "senior" in title or "sr" in title: next_role = "Staff Engineer / Tech Lead"
+    if "staff" in title or "lead" in title: next_role = "Principal Engineer"
+    if "principal" in title: next_role = "Director of Engineering"
+    yr = 2028 if vel >= 1.2 else 2029
+    return f"{next_role} by {yr}"
+
+def get_poach_value(cand):
+    if compute_elite_alumni_bonus(cand) > 1.0: return "🔥 CRITICAL (Tier-1 Competitor)"
+    return "Standard"
+
+def get_fluff_score(cand):
+    fluff_words = ["synergy", "paradigm shift", "blockchain", "web3", "thought leader", "ninja", "rockstar", "guru"]
+    text = extract_text_for_bm25(cand)
+    count = sum(1 for w in fluff_words if w in text)
+    if count >= 3: return "🚩 High Fluff Detected"
+    return "✅ Concise & Technical"
+
+def predict_time_to_hire(cand):
+    resp = cand.get("redrob_signals", {}).get("recruiter_response_rate", 1.0)
+    notice = cand.get("redrob_signals", {}).get("notice_period_days", 90)
+    days = int(notice + ( (1.0 - resp) * 30 ))
+    return f"~{days} Days"
+
+def predict_retention(cand):
+    stab = min(1.0, compute_career_stability(cand) / 1.2)
+    learn = min(1.0, (compute_lifelong_learner_index(cand) - 1.0) * 10)
+    prob = (stab * 0.7) + (learn * 0.3)
+    return f"{int(prob * 100)}%"
+
+def generate_offer_letter(cand):
+    fname = cand.get("first_name", "Candidate")
+    sal = predict_salary(cand)
+    return f"Dear {fname}, we are thrilled to offer you the AI Engineer position. Given your elite background, we are prepared to offer {sal}, along with an accelerated track to {predict_trajectory(cand).split(' by ')[0]}."
+
 def generate_reasoning(cand, rrf_score):
     yoe = cand.get("profile", {}).get("years_of_experience", 0)
     title = cand.get("profile", {}).get("current_title", "Engineer")
@@ -402,7 +447,14 @@ def generate_reasoning(cand, rrf_score):
         "exec_summary": generate_executive_summary(cand, pers, rrf_score),
         "skills": top_skills,
         "interview_qs": generate_interview_questions(cand),
-        "percentile_badges": get_percentile_badges(cand)
+        "percentile_badges": get_percentile_badges(cand),
+        "salary": predict_salary(cand),
+        "trajectory": predict_trajectory(cand),
+        "poach_value": get_poach_value(cand),
+        "fluff": get_fluff_score(cand),
+        "time_to_hire": predict_time_to_hire(cand),
+        "retention": predict_retention(cand),
+        "offer_letter": generate_offer_letter(cand)
     }
     xray_str = json.dumps(xray_data)
     

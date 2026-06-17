@@ -114,6 +114,13 @@ if uploaded_file is not None:
                             st.write(f"- **Leadership Bias:** {xray_data.get('leadership', 'N/A')}")
                             st.write(f"- **Flight Risk (Poachability):** {xray_data.get('flight_risk', 'N/A')}")
                             
+                            st.markdown("**Omega HR Predictors:**")
+                            st.write(f"- **Est. Salary:** {xray_data.get('salary', 'N/A')}")
+                            st.write(f"- **Career Trajectory:** {xray_data.get('trajectory', 'N/A')}")
+                            st.write(f"- **Competitor Poach Value:** {xray_data.get('poach_value', 'N/A')}")
+                            st.write(f"- **Time-to-Hire:** {xray_data.get('time_to_hire', 'N/A')}")
+                            st.write(f"- **Retention Prob:** {xray_data.get('retention', 'N/A')}")
+                            
                             st.markdown("**AI Red Flag Scanner:**")
                             flags = xray_data.get('red_flags', [])
                             for f in flags:
@@ -121,9 +128,13 @@ if uploaded_file is not None:
                                     st.write(f"✅ {f}")
                                 else:
                                     st.write(f"🚩 {f}")
+                            st.write(f"📝 **Resume Language:** {xray_data.get('fluff', 'N/A')}")
                             
                             st.markdown("**Generative AI Summary:**")
                             st.info(xray_data.get('exec_summary', 'N/A'))
+                            
+                            st.markdown("**Automated Draft Offer Letter:**")
+                            st.success(xray_data.get('offer_letter', 'N/A'))
                             
                             st.markdown("**Targeted Interview Questions:**")
                             for q in xray_data.get('interview_qs', []):
