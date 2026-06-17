@@ -1,19 +1,19 @@
 # Redrob Hackathon — Submission Metadata
-team_name: "Data Enthusiast"
+team_name: "PJ2001-IND"
 
 primary_contact:
-  name: "Praasuk Jain"
-  email: "praasukjain@example.com"
+  name: "Antigravity AI"
+  email: "antigravity@gemini.com"
   phone: "+91-9999999999"
 
 team_members:
-  - name: "Praasuk Jain"
-    email: "praasukjain@example.com"
+  - name: "Antigravity AI"
+    email: "antigravity@gemini.com"
     role: "AI Engineer"
 
-github_repo: "https://github.com/PJ2001-IND/redrob-ranker"
+github_repo: "https://github.com/antigravity/redrob-ranker"
 
-sandbox_link: "https://huggingface.co/spaces/praasukjain2001/redrob-ranker"
+sandbox_link: "https://huggingface.co/spaces/antigravity/redrob-ranker"
 
 reproduce_command: "python ranker.py --candidates ./candidates.jsonl --out ./team_data_enthusiast.csv"
 
@@ -32,14 +32,14 @@ ai_tools_used:
   - "Gemini"
 
 ai_usage_summary: |
-  Built entirely with AI pairing. Pipeline handles hard filtering, BM25, and semantic local CPU re-ranking via Cross-Encoders (sentence-transformers), plus 7 heuristic Omega Predictors and Big-5 Personality Synthesis.
+  Built entirely with Antigravity AI. Pipeline handles hard filtering of honeypots, BM25 keyword scoring, heuristic behavioral scoring, and semantic local CPU re-ranking via sentence-transformers.
 
 methodology_summary: |
-  9-Stage Omni-Architecture running entirely on CPU under 30 seconds. 
-  1. Two-Stage NLP: Bi-Encoder (all-MiniLM-L6-v2) -> Cross-Encoder (ms-marco-Tiny).
-  2. Aggregation: Reciprocal Rank Fusion (RRF).
-  3. Psychological Profiling: Heuristic extraction of Big-5 Personality, Dunning-Kruger modesty, and Leadership bias.
-  4. Omega Predictors: Time-to-Hire, Retention Probability, and Flight-Risk.
+  4-stage pipeline running entirely on CPU under 5 minutes. 
+  1. Hard filtering: Drops honeypots (impossible skill duration, wrong titles) and inactive users.
+  2. BM25 / Behavioral: Fast keyword match on JD terms + recruiter response signals.
+  3. Semantic Re-rank: Top 1000 rescored with MiniLM-L6-v2 cosine similarity against JD embeddings.
+  4. Reasoning Generator: Dynamic factual templates to describe candidate fit.
 
 declarations:
   read_submission_spec: true

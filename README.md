@@ -21,13 +21,13 @@ This repository contains the candidate ranking pipeline for the India Runs Data 
 ## Running the Ranker
 To produce the submission CSV from the candidates dataset, run:
 ```bash
-python ranker.py --candidates ./candidates.jsonl --out ./team_PJ2001_IND.csv
+python ranker.py --candidates ./candidates.jsonl --out ./team_data_enthusiast.csv
 ```
 
-This will run the 4-stage pipeline entirely on CPU in under 5 minutes and output the `team_PJ2001_IND.csv` file.
+This will run the 4-stage pipeline entirely on CPU in under 5 minutes and output the `team_data_enthusiast.csv` file.
 
 ## Validation
 You can validate the output using the official validator:
 ```bash
-python validate_submission.py team_PJ2001_IND.csv
+python validate_submission.py team_data_enthusiast.csv
 ```

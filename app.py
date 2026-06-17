@@ -176,7 +176,7 @@ if uploaded_file is not None:
                     st.write("")
                     
             with open("temp_submission.csv", "rb") as file:
-                st.download_button("Download Full CSV Submission", data=file, file_name="team_PJ2001_IND.csv", mime="text/csv")
+                st.download_button("Download Full CSV Submission", data=file, file_name="team_data_enthusiast.csv", mime="text/csv")
         else:
             st.error("Error running ranker pipeline.")
             st.code(result.stderr)
