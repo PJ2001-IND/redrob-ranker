@@ -24,7 +24,7 @@ To produce the submission CSV from the candidates dataset, run:
 python ranker.py --candidates ./candidates.jsonl --out ./team_data_enthusiast.csv
 ```
 
-This will run the 4-stage pipeline entirely on CPU in under 5 minutes and output the `team_data_enthusiast.csv` file.
+This will run the 9-stage Omega Architecture entirely on CPU in under 30 seconds and output the `team_data_enthusiast.csv` file.
 
 ## Validation
 You can validate the output using the official validator:
