@@ -40,11 +40,11 @@ reproduce_command: "python ranker.py --candidates ./candidates.jsonl --out ./tea
 # Compute environment
 # ============================================================================
 compute:
-  platform: "MacBook Pro M2"                    # Or: "AWS EC2 c5.4xlarge", "Local Linux box", etc.
-  cpu_cores: 8                                  # Number of CPU cores used
+  platform: "Apple M4"                          # Or: "AWS EC2 c5.4xlarge", "Local Linux box", etc.
+  cpu_cores: 10                                 # Number of CPU cores used
   ram_gb: 16                                    # Available RAM in GB
-  python_version: "3.11"                      # python --version
-  os: "macOS 14.2"                              # Or "Ubuntu 22.04 LTS", etc.
+  python_version: "3.14.5"                      # python --version
+  os: "macOS 26.5.1"                            # Or "Ubuntu 22.04 LTS", etc.
   uses_gpu_for_inference: false                 # Must be false — see compute constraints
   has_network_during_ranking: false             # Must be false — no API calls during ranking
   pre_computation_required: false               # true if you pre-compute embeddings or train models offline
