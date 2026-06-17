@@ -1,19 +1,19 @@
 # Redrob Hackathon — Submission Metadata
-team_name: "PJ2001-IND"
+team_name: "Data Enthusiast"
 
 primary_contact:
-  name: "Antigravity AI"
-  email: "antigravity@gemini.com"
-  phone: "+91-9999999999"
+  name: "Praasuk Jain"
+  email: "YOUR_REAL_EMAIL@example.com"
+  phone: "YOUR_REAL_PHONE_NUMBER"
 
 team_members:
-  - name: "Antigravity AI"
-    email: "antigravity@gemini.com"
-    role: "AI Engineer"
+  - name: "Praasuk Jain"
+    email: "YOUR_REAL_EMAIL@example.com"
+    role: "Team Leader"
 
-github_repo: "https://github.com/antigravity/redrob-ranker"
+github_repo: "https://github.com/PJ2001-IND/redrob-ranker"
 
-sandbox_link: "https://huggingface.co/spaces/antigravity/redrob-ranker"
+sandbox_link: "https://huggingface.co/spaces/praasukjain2001/redrob-ranker"
 
 reproduce_command: "python ranker.py --candidates ./candidates.jsonl --out ./team_data_enthusiast.csv"
 
@@ -35,11 +35,11 @@ ai_usage_summary: |
   Built entirely with Antigravity AI. Pipeline handles hard filtering of honeypots, BM25 keyword scoring, heuristic behavioral scoring, and semantic local CPU re-ranking via sentence-transformers.
 
 methodology_summary: |
-  4-stage pipeline running entirely on CPU under 5 minutes. 
-  1. Hard filtering: Drops honeypots (impossible skill duration, wrong titles) and inactive users.
-  2. BM25 / Behavioral: Fast keyword match on JD terms + recruiter response signals.
-  3. Semantic Re-rank: Top 1000 rescored with MiniLM-L6-v2 cosine similarity against JD embeddings.
-  4. Reasoning Generator: Dynamic factual templates to describe candidate fit.
+  9-stage Omega Architecture running natively on CPU.
+  1. Deep NLP Pipeline: Bi-Encoder (MiniLM) semantic retrieval + Cross-Encoder (MS-Marco) absolute reranking.
+  2. Aggregation: Reciprocal Rank Fusion (RRF) for mathematical sorting.
+  3. Psychological Profiling: Heuristic extraction of Big-5 (OCEAN) traits, Dunning-Kruger modesty, and Leadership bias.
+  4. Omega Predictors: Flight-Risk, Salary estimators, and Resume Fluff detectors.
 
 declarations:
   read_submission_spec: true
