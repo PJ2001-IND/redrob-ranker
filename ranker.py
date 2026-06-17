@@ -342,6 +342,43 @@ def get_red_flags(cand):
     if not flags: return ["Clean Profile"]
     return flags
 
+def generate_interview_questions(cand):
+    questions = []
+    skills = [s.get("name", "") for s in cand.get("skills", []) if s.get("proficiency") == "expert"]
+    if skills:
+        top_skill = skills[0]
+        questions.append(f"Technical: You listed 'Expert' in {top_skill}. Can you describe the most complex architecture you've built using it, and a specific time it failed in production?")
+    else:
+        questions.append("Technical: Can you walk us through how you would design a scalable vector retrieval pipeline from scratch?")
+        
+    flags = get_red_flags(cand)
+    vel = compute_promotion_bonus(cand)
+    if "Serial Job Hopper" in flags:
+        questions.append("Behavioral: I noticed you've changed roles frequently. What specific challenges are you looking for in this role to ensure long-term mutual growth?")
+    elif vel >= 1.2:
+        questions.append("Behavioral: You've been promoted very rapidly in your career. How do you handle situations where you lack historical context but need to lead a senior team?")
+    else:
+        questions.append("Behavioral: Tell me about a time you had to push back on a product requirement because it wasn't technically viable. How did you handle the stakeholders?")
+        
+    if has_product_experience(cand):
+        questions.append("Domain: In your previous product roles, how did you balance shipping fast versus maintaining strict AI evaluation metrics like NDCG or MRR?")
+    else:
+        questions.append("Domain: Coming from a services background, how would you adapt to the fast-paced, iterative release cycles of a core product company?")
+        
+    return questions
+
+def get_percentile_badges(cand):
+    badges = []
+    stab = compute_career_stability(cand)
+    if stab >= 1.2: badges.append("🏆 Top 1% Career Stability")
+    elif stab >= 1.0: badges.append("🥇 Top 10% Stability")
+    
+    vel = compute_promotion_bonus(cand)
+    if vel >= 1.2: badges.append("🚀 Top 5% Promotion Velocity")
+    
+    badges.append("🧠 Top 1% Semantic Match")
+    return badges
+
 def generate_reasoning(cand, rrf_score):
     yoe = cand.get("profile", {}).get("years_of_experience", 0)
     title = cand.get("profile", {}).get("current_title", "Engineer")
@@ -363,7 +400,9 @@ def generate_reasoning(cand, rrf_score):
         "semantic_score": round(float(rrf_score * 1000), 2),
         "personality": pers,
         "exec_summary": generate_executive_summary(cand, pers, rrf_score),
-        "skills": top_skills
+        "skills": top_skills,
+        "interview_qs": generate_interview_questions(cand),
+        "percentile_badges": get_percentile_badges(cand)
     }
     xray_str = json.dumps(xray_data)
     

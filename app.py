@@ -19,8 +19,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🤖 Redrob AI Recruiter Dashboard (Singularity Edition)")
+st.title("🤖 Redrob AI Recruiter Dashboard (The Masterpiece)")
 st.markdown("**Welcome to the Future of Hiring.** Upload `small_candidates.jsonl` to run the state-of-the-art Psychological AI pipeline.")
+
+blind_mode = st.toggle("🎭 Enable Blind Audition Mode (Anti-Bias)", value=False)
 
 uploaded_file = st.file_uploader("Upload Candidates (JSONL)", type="jsonl")
 
@@ -71,13 +73,24 @@ if uploaded_file is not None:
                         xray_data = json.loads(parts[1])
                     except: pass
                 
+                if blind_mode:
+                    display_fname = f"Candidate"
+                    display_lname = f"Alpha-{str(cid)[-4:]}"
+                    display_company = "Confidential Company"
+                else:
+                    display_fname = fname
+                    display_lname = lname
+                    display_company = company
+                
+                badges_html = "".join([f'<span class="badge" style="background-color:#28a745; margin-left:5px;">{b}</span>' for b in xray_data.get('percentile_badges', [])])
+                
                 with st.container():
                     st.markdown(f'''
                     <div class="metric-card">
                         <div style="display:flex; justify-content:space-between;">
                             <div>
-                                <p class="cand-name">{fname} {lname} <span class="badge">Rank #{int(row['rank'])}</span></p>
-                                <p class="cand-title">{title} @ {company}</p>
+                                <p class="cand-name">{display_fname} {display_lname} <span class="badge">Rank #{int(row['rank'])}</span>{badges_html}</p>
+                                <p class="cand-title">{title} @ {display_company}</p>
                             </div>
                             <div style="text-align:right;">
                                 <h2>{row['score']:.1f}</h2>
@@ -112,6 +125,10 @@ if uploaded_file is not None:
                             st.markdown("**Generative AI Summary:**")
                             st.info(xray_data.get('exec_summary', 'N/A'))
                             
+                            st.markdown("**Targeted Interview Questions:**")
+                            for q in xray_data.get('interview_qs', []):
+                                st.write(f"🎙️ {q}")
+                            
                         with col2:
                             categories = ['Semantic Match', 'Career Stability', 'Action Bias', 'Modesty', 'Velocity']
                             sem = min(100, max(20, xray_data.get('semantic_score', 50) * 10))
@@ -123,7 +140,7 @@ if uploaded_file is not None:
                             
                             fig = go.Figure()
                             fig.add_trace(go.Scatterpolar(
-                                r=values, theta=categories, fill='toself', name=f"{fname}'s Profile", line_color='#6c63ff'
+                                r=values, theta=categories, fill='toself', name=f"{display_fname}'s Profile", line_color='#6c63ff'
                             ))
                             fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=20, r=20, t=20, b=20), height=250)
                             st.plotly_chart(fig, use_container_width=True)
@@ -136,12 +153,12 @@ if uploaded_file is not None:
                               bgcolor="transparent"
                               node [shape=box, style=filled, fillcolor="#eef2ff", color="#6c63ff", fontname="Helvetica"]
                               edge [color="#6c63ff"]
-                              "JD: AI Engineer" -> "{fname}"
+                              "JD: AI Engineer" -> "{display_fname}"
                             """
                             for sk in skills:
                                 if sk:
                                     sk_clean = str(sk).replace('"', '')
-                                    graph_code += f'  "{fname}" -> "{sk_clean}"\n'
+                                    graph_code += f'  "{display_fname}" -> "{sk_clean}"\n'
                             graph_code += "}"
                             st.graphviz_chart(graph_code)
 
